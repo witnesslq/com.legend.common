@@ -11,11 +11,8 @@ import org.hibernate.LockMode;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.HibernateTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 
 import com.legend.common.dao.BaseDao;
 
