@@ -11,10 +11,10 @@
 	<artifactId>common-utils</artifactId>
 	<name>common-utils</name>
 	<packaging>jar</packaging>
-	
+
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId> 
+			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
@@ -25,6 +25,10 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+		</dependency>
 	</dependencies>
-	
+
 </project> 

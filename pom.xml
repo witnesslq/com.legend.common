@@ -56,6 +56,11 @@
 				<artifactId>hibernate-core</artifactId>
 				<version>${org.hibernate.ogm.version}</version>
 			</dependency>
+			<dependency> 
+				<groupId>com.thoughtworks.xstream</groupId>
+				<artifactId>xstream</artifactId>
+				<version>1.4.7</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
