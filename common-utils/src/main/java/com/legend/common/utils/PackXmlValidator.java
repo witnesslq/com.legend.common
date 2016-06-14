@@ -14,7 +14,7 @@ import javax.xml.validation.Validator;
 
 import org.xml.sax.SAXException;
 
-public class ValidatXmlUtil {
+public class PackXmlValidator {
 	   public final static String SCHEMA_LANGUAGE = "http://www.w3.org/2001/XMLSchema";  
 	   
 	    /** 
@@ -25,7 +25,7 @@ public class ValidatXmlUtil {
 	    public static XmlValidateResult validateByXsd(String xmlStr, String xsdStr) {  
 	        // 查找支持指定模式语言的 SchemaFactory 的实现并返回它  
 	        SchemaFactory factory = SchemaFactory  
-	                .newInstance(ValidatXmlUtil.SCHEMA_LANGUAGE);  
+	                .newInstance(PackXmlValidator.SCHEMA_LANGUAGE);  
 	        // 包装待验证的xml字符串为Reader  
 	        Reader xmlReader = new BufferedReader(new StringReader(xmlStr));  
 	        // 保障Schema xsd字符串为Reader  
@@ -71,8 +71,8 @@ public class ValidatXmlUtil {
 	     */  
 	    public static void main(String[] args0) throws IOException { 
 	    	
-	        BufferedReader xmlBuff = new BufferedReader(new InputStreamReader(ValidatXmlUtil.class.getClassLoader().getResourceAsStream("XmlData/beps.121.001.01.xml")));  
-	        BufferedReader xsdBuff = new BufferedReader(new InputStreamReader(ValidatXmlUtil.class.getClassLoader().getResourceAsStream("XmlData/beps.121.001.01.xsd")));  
+	        BufferedReader xmlBuff = new BufferedReader(new InputStreamReader(PackXmlValidator.class.getClassLoader().getResourceAsStream("XmlData/beps.121.001.01.xml")));  
+	        BufferedReader xsdBuff = new BufferedReader(new InputStreamReader(PackXmlValidator.class.getClassLoader().getResourceAsStream("XmlData/beps.121.001.01.xsd")));  
 	  
 	  
 	        StringBuffer xmlStr = new StringBuffer();  
@@ -90,7 +90,7 @@ public class ValidatXmlUtil {
 	        }  
 	        xsdBuff.close();  
 	  
-	        XmlValidateResult vs = ValidatXmlUtil.validateByXsd(xmlStr.toString(),  
+	        XmlValidateResult vs = PackXmlValidator.validateByXsd(xmlStr.toString(),  
 	                xsdStr.toString());  
 	        if (vs.isValidated()) {  
 	            System.out.println("验证成功！");  

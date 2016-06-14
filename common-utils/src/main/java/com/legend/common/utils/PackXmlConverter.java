@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class ConvXmlUtil {
+public class PackXmlConverter {
 	private static final String xmlString = "<books><book price=\"108\"><name>Java编程思想</name><author>Bruce Eckel</author></book><book price=\"52\"><name>Effective Java</name><author>Joshua Bloch</author></book><book price=\"118\"><name>Java 7入门经典</name><author>Ivor Horton</author></book></books>";
 
 	public static String toXml(Object obj) {
