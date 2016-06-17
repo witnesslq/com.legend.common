@@ -1,4 +1,4 @@
-package com.legend.common.utils;
+package com.legend.common.pack;
 
 import java.io.BufferedReader;
 import java.io.IOException;
