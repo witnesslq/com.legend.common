@@ -1,0 +1,30 @@
+<Cartoon>
+	<Message id="b45ff6b138999f8a0c7341b19ee0d5f6">
+		<BQReq id="BQReq">
+			<version>1.0.1</version>
+			<date>20110601 16:12:15</date>
+			<instId>ALIPAY</instId>
+			<certId>ALIPAY2007072500</certId>
+			<signNo>6212380001000000557</signNo>
+		</BQReq>
+		<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+			<SignedInfo>
+				<CanonicalizationMethod
+					Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></CanonicalizationMethod>
+				<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></SignatureMethod>
+				<Reference URI="#BQReq">
+					<Transforms>
+						<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></Transform>
+					</Transforms>
+					<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
+					<DigestValue>+a507kEOF7LIHHN6/YvkaDnD1pc=</DigestValue>
+				</Reference>
+			</SignedInfo>
+			<SignatureValue>
+				HtwjKQT5Nw+Pnhni5mj9a7xfamPkjEhLwYLKOtWjQ71w2dVKUdgQxdIpG8qmXXVQM0SwU/F5fcmM
+				X/S3nLoHQrU4xCcyp/jAmynYgJ6/6HQMf0vZeyEQ7a2snjhf0Y0wzkO18ym/tEeb9XRH/AHJCbOo
+				VHGe4LO4ie4fPU55DVU=
+			</SignatureValue>
+		</Signature>
+	</Message>
+</Cartoon>
