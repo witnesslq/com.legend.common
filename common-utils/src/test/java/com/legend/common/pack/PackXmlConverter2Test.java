@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import javax.xml.bind.JAXBException;
 
 import org.dom4j.DocumentException;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.legend.common.model.beps.beps_121_001_01.CustomerCreditTransfer;
@@ -63,13 +64,14 @@ public class PackXmlConverter2Test {
 			xmlStr += s;
 		}
 		try {
-			String txCode = PackXmlConverter.getTxCode(xmlStr,"/xmlns:Document/xmlns:CstmrCdtTrf/child::*[2]","UTF-8");
-			System.out.println("txCode=["+txCode+"]");
+			String txCode = PackXmlConverter.getTxCode(xmlStr, "/xmlns:Document/xmlns:CstmrCdtTrf/child::*[2]",
+					"UTF-8");
+			System.out.println("txCode=[" + txCode + "]");
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void testGetTxCode2() throws IOException {
 		InputStream is = PackXmlConverter2Test.class.getClassLoader().getResourceAsStream("BQReq.xml");
@@ -80,11 +82,22 @@ public class PackXmlConverter2Test {
 			xmlStr += s;
 		}
 		try {
-			String txCode = PackXmlConverter.getTxCode(xmlStr,"/Cartoon/Message/*[@id]","UTF-8");
-			System.out.println("txCode=["+txCode+"]");
+			String txCode = PackXmlConverter.getTxCode(xmlStr, "/Cartoon/Message/*[@id]", "UTF-8");
+			System.out.println("txCode=[" + txCode + "]");
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void testGetTxCode3() throws IOException {
+		String xmlStr = null;
+		String txCode = null;
+		try {
+			txCode = PackXmlConverter.getTxCode(xmlStr, "/Cartoon/Message/*[@id]", "UTF-8");
+		} catch (DocumentException e) {
+			//e.printStackTrace();
+		}
+		Assert.assertTrue(txCode == null);
 	}
 }
