@@ -28,6 +28,9 @@ public class PackXmlConverter {
 
 	public static <T> String toXml(T model, Class<T> clazz, String charsetName)
 			throws JAXBException, UnsupportedEncodingException {
+		if(DataUtil.isEmpty(charsetName)){
+			charsetName = "UTF-8";
+		}
 		JAXBContext jc = JAXBContext.newInstance(clazz);
 		Marshaller ms = jc.createMarshaller();
 		ms.setProperty("jaxb.encoding", charsetName);
@@ -39,6 +42,12 @@ public class PackXmlConverter {
 
 	public static <T> T toBean(String xmlStr, Class<T> clazz, String charsetName)
 			throws JAXBException, UnsupportedEncodingException {
+		if(DataUtil.isEmpty(xmlStr)){
+			throw new JAXBException("收到的Xml文档为null,解析失败");
+		}
+		if(DataUtil.isEmpty(charsetName)){
+			charsetName = "UTF-8";
+		}
 		JAXBContext jc = JAXBContext.newInstance(clazz);
 		Unmarshaller ums = jc.createUnmarshaller();
 		ByteArrayInputStream bais = new ByteArrayInputStream(xmlStr.getBytes(charsetName));
@@ -47,9 +56,18 @@ public class PackXmlConverter {
 		return model;
 	}
 
-	public static String getTxCode(String xmlStr, String xpath, String charsetName)
+	public static String getTxCode(String xmlStr, String xPath, String charsetName)
 			throws DocumentException, UnsupportedEncodingException {
 		String XMLNS = "xmlns";
+		if(DataUtil.isEmpty(xmlStr)){
+			throw new DocumentException("收到的Xml文档为null,解析交易码失败");
+		}
+		if(DataUtil.isEmpty(xPath)){
+			throw new DocumentException("收到的xPath为null,解析交易码失败");
+		}
+		if(DataUtil.isEmpty(charsetName)){
+			charsetName = "UTF-8";
+		}
 		ByteArrayInputStream bais = new ByteArrayInputStream(xmlStr.getBytes(charsetName));
 		SAXReader reader = new SAXReader();
 		Document document = reader.read(bais);
@@ -64,7 +82,7 @@ public class PackXmlConverter {
 			}
 			xmlMap.put(key, ns.getURI());
 		}
-		XPath x0 = document.createXPath(xpath);
+		XPath x0 = document.createXPath(xPath);
 		x0.setNamespaceURIs(xmlMap);
 		Node node = x0.selectSingleNode(document);
 		if(node==null){
