@@ -6,10 +6,11 @@
 	<parent>
 		<groupId>com.legend.common</groupId>
 		<artifactId>common-root</artifactId>
-		<version>1.1.0</version>
+		<version>1.0.0</version>
 	</parent>
 	<artifactId>common-persist</artifactId>
 	<name>common-persist</name>
+	<version>1.0.0</version>
 
 	<dependencies>
 			<dependency>

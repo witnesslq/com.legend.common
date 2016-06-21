@@ -1,9 +1,9 @@
 package com.legend.common.utils;
 
-import static org.junit.Assert.fail;
-
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class DataUtilTest {
 	public void testBeanCopy() {
 		Templ src = new Templ(1,"name1",new Date());
 		Templ des = new Templ();
-		DataUtil.BeanCopy(src, des);
+		DataUtil.beanCopy(src, des);
 		Assert.assertEquals(src,des);
 	}
 
@@ -28,7 +28,85 @@ public class DataUtilTest {
 	public void testIsEmptyCollection() {
 		Assert.assertTrue(DataUtil.isEmpty(new ArrayList<String>()));
 	}
+	
+	@Test
+	public void testBeanToMap(){
+		Templ templ = new Templ(1,"name1",new Date());
+		Templ templ2 = new Templ(2,"name2",new Date());
+		Complex complex = new Complex();
+		complex.setId(2);
+		complex.setXx("xx");
+		complex.setTempl1(templ);
+		complex.setTempl2(templ2);
+		SuperComplex SuperComplex = new SuperComplex();
+		SuperComplex.setDd(5);
+		SuperComplex.setNn("nn");
+		SuperComplex.setComplex(complex);
+		try {
+			Map<String, Object> map = DataUtil.beanToMap(SuperComplex);
+			System.out.println(map);
+			Assert.assertSame("name2",map.get("supercomplex.complex.templ2.name"));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new RuntimeException();
+		}
+	}
 
+}
+
+class SuperComplex{
+	private Integer dd;
+	private String nn;
+	private Complex complex;
+	public Integer getDd() {
+		return dd;
+	}
+	public void setDd(Integer dd) {
+		this.dd = dd;
+	}
+	public String getNn() {
+		return nn;
+	}
+	public void setNn(String nn) {
+		this.nn = nn;
+	}
+	public Complex getComplex() {
+		return complex;
+	}
+	public void setComplex(Complex complex) {
+		this.complex = complex;
+	}
+	
+}
+
+class Complex{
+	private Integer id;
+	private String xx;
+	private Templ templ1;
+	private Templ templ2;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getXx() {
+		return xx;
+	}
+	public void setXx(String xx) {
+		this.xx = xx;
+	}
+	public Templ getTempl1() {
+		return templ1;
+	}
+	public void setTempl1(Templ templ1) {
+		this.templ1 = templ1;
+	}
+	public Templ getTempl2() {
+		return templ2;
+	}
+	public void setTempl2(Templ templ2) {
+		this.templ2 = templ2;
+	}
 }
 
 class Templ {
