@@ -26,7 +26,7 @@ import com.legend.common.utils.DataUtil;
 
 public class PackXmlConverter {
 
-	public static <T> String toXml(T model, Class<T> clazz, String charsetName)
+	public static String toXml(Object model, Class<?> clazz, String charsetName)
 			throws JAXBException, UnsupportedEncodingException {
 		if(DataUtil.isEmpty(charsetName)){
 			charsetName = "UTF-8";

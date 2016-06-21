@@ -78,7 +78,10 @@ public class DataUtil {
 						|| parameterType == long.class || parameterType == Double.class
 						|| parameterType == double.class) {
 					Object value = map.get(key);
-					method.invoke(model, value);
+					if (value != null) {
+						System.out.println(key);
+						method.invoke(model, value);
+					}
 				} else {
 					Object value = mapToBean(map, parameterType, key);
 					method.invoke(model, value);
