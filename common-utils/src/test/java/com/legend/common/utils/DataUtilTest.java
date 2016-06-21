@@ -47,8 +47,40 @@ public class DataUtilTest {
 			System.out.println(map);
 			Assert.assertSame("name2",map.get("supercomplex.complex.templ2.name"));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
+	}
+	
+	@Test
+	public void testMapToBean(){
+		Templ templ = new Templ(1,"name1",new Date());
+		Templ templ2 = new Templ(2,"name2",new Date());
+		Complex complex = new Complex();
+		complex.setId(2);
+		complex.setXx("xx");
+		complex.setTempl1(templ);
+		complex.setTempl2(templ2);
+		SuperComplex superComplex = new SuperComplex();
+		superComplex.setDd(5);
+		superComplex.setNn("nn");
+		superComplex.setComplex(complex);
+		Map<String, Object> map = null;
+		try {
+			map = DataUtil.beanToMap(superComplex);
+			System.out.println(map);
+			Assert.assertSame("name2",map.get("supercomplex.complex.templ2.name"));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+		
+		try {
+			SuperComplex sc =  DataUtil.mapToBean(map, SuperComplex.class);
+			Assert.assertSame("name2",sc.getComplex().getTempl2().getName());
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+		
 	}
 
 }
