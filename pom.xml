@@ -5,7 +5,7 @@
 
 	<groupId>com.legend.common</groupId>
 	<artifactId>common-root</artifactId>
-	<version>1.1.0</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<name>common-root</name>
 	<url>http://maven.apache.org</url>
