@@ -1,4 +1,4 @@
-package com.legend.common.pack;
+package com.legend.common.pack.pXml;
 
 import java.io.UnsupportedEncodingException;
 
@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.legend.common.model.test.DataBase;
 import com.legend.common.model.test.ObjectFactory;
+import com.legend.common.pack.pXml.PackXmlConverter;
 
 public class PackXmlConverter1Test {
 

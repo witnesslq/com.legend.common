@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Pack8583DicMap xmlns="http://www.legend.com/Pack8583DicMap.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.legend.com/Pack8583DicMap.xsd Pack8583DicMap.xsd"
+	bitMapVisable="false" bitMapLen="64">
+	<Pack8583Dic>
+		<BitSeq>2</BitSeq>
+		<DataCode>0020</DataCode>
+		<DataType>1</DataType>
+		<LenType>2</LenType>
+		<DataLen>22</DataLen>
+		<DataDec>0</DataDec>
+		<Desc>主帐号</Desc>
+		<MabTag>true</MabTag>
+		<Format>FillZeroLeft</Format>
+	</Pack8583Dic>
+	<Pack8583Dic>
+		<BitSeq>3</BitSeq>
+		<DataCode>0030</DataCode>
+		<DataType>1</DataType>
+		<LenType>0</LenType>
+		<DataLen>6</DataLen>
+		<DataDec>0</DataDec>
+		<Desc>处理代码</Desc>
+		<MabTag>true</MabTag>
+		<Format>FillZeroLeft</Format>
+	</Pack8583Dic>
+</Pack8583DicMap>

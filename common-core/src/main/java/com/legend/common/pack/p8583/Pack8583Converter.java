@@ -1,9 +1,16 @@
-package com.legend.common.pack;
+package com.legend.common.pack.p8583;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,26 +18,49 @@ import org.slf4j.LoggerFactory;
 import com.legend.common.exception.Pack8583Exception;
 import com.legend.common.utils.DigestUtil;
 
+
 public class Pack8583Converter {
 
 	private static Logger logger = LoggerFactory.getLogger(Pack8583Converter.class);
 
-	private Map<Integer, Pack8583Dic> dataDic; // 8583数据字典
+	private Map<Integer, Pack8583Dic> dataDicMap; // 8583数据字典
+	private Pack8583DicMap pack8583DicMap ;
 
-	public Pack8583Converter(Map<Integer, Pack8583Dic> dataDic){
-		this.dataDic = dataDic;
+	/*
+	 * 使用spring构造函数注入
+	 */
+	public Pack8583Converter(String dataDicFilePath) throws Pack8583Exception {
+		try {
+			this.dataDicMap = loadDataDic(dataDicFilePath);
+		} catch (Pack8583Exception e) {
+			throw new Pack8583Exception(e);
+		}
 	}
 
-	public byte[] to8583_64(Map<String, Object> dataMap) throws Pack8583Exception {
-		return to8583(dataMap, 64, "UTF-8");
+	private Map<Integer, Pack8583Dic> loadDataDic(String dataDicFilePath) throws Pack8583Exception {
+		try {
+			JAXBContext jc = JAXBContext.newInstance(Pack8583DicMap.class);
+			Unmarshaller ums = jc.createUnmarshaller();
+			this.pack8583DicMap = (Pack8583DicMap) ums.unmarshal(new File(dataDicFilePath));
+		} catch (JAXBException e) {
+			logger.error("读取数据字典配置文件错误[" + dataDicFilePath + "]");
+			throw new Pack8583Exception("读取数据字典配置文件错误" + e);
+		}
+
+		Map<Integer, Pack8583Dic> map = new LinkedHashMap<Integer, Pack8583Dic>();
+		List<Pack8583Dic> pack8583Dics = this.pack8583DicMap.getPack8583Dic();
+		for (Pack8583Dic pack8583Dic : pack8583Dics) {
+			map.put(pack8583Dic.getBitSeq(), pack8583Dic);
+		}
+
+		return map;
 	}
 
-	public byte[] to8583_128(Map<String, Object> dataMap) throws Pack8583Exception {
-		return to8583(dataMap, 128, "UTF-8");
+	public byte[] to8583(Map<String, Object> dataMap) throws Pack8583Exception {
+		return to8583(dataMap, this.pack8583DicMap.getBitMapLen(), "UTF-8");
 	}
 
-	private byte[] to8583(Map<String, Object> dataMap, int bitMapLen, String charsetName)
-			throws Pack8583Exception {
+	private byte[] to8583(Map<String, Object> dataMap, int bitMapLen, String charsetName) throws Pack8583Exception {
 		int mapLen = bitMapLen / 8;
 		byte[] bitMap = new byte[mapLen];
 		byte[] dataArea = null;
@@ -38,10 +68,9 @@ public class Pack8583Converter {
 			bitMap[i] = 0X00;
 			for (int j = 0; j < 8; ++j) {
 				int bitSeq = i * 8 + j + 1;
-				Pack8583Dic p8583Dic = dataDic.get(bitSeq);
+				Pack8583Dic p8583Dic = dataDicMap.get(bitSeq);
 				if (p8583Dic == null) {
-					logger.error("数据字典缺失[" + bitSeq + "]");
-					throw new Pack8583Exception("数据字典缺失");
+					continue;
 				}
 				String dataCode = p8583Dic.getDataCode();
 				if (dataCode == null) {
@@ -86,7 +115,7 @@ public class Pack8583Converter {
 
 	private byte[] packDataConv(Object dataValue, String dataType, String lenType, int dataLen, int dataDec,
 			String charsetName) throws UnsupportedEncodingException {
-		//TODO
+		// TODO
 		String s = (String) dataValue;
 		byte[] dataByte = null;
 		try {
@@ -112,16 +141,11 @@ public class Pack8583Converter {
 		return pack8583.array();
 	}
 
-	public Map<String, Object> toMap_64(byte[] dataPack) throws Pack8583Exception {
-		return toMap(dataPack, 64, "UTF-8");
+	public Map<String, Object> toMap(byte[] dataPack) throws Pack8583Exception {
+		return toMap(dataPack, this.pack8583DicMap.getBitMapLen(), "UTF-8");
 	}
 
-	public Map<String, Object> toMap_128(byte[] dataPack) throws Pack8583Exception {
-		return toMap(dataPack, 128, "UTF-8");
-	}
-
-	private Map<String, Object> toMap(byte[] dataPack, int bitMapLen, String charsetName)
-			throws Pack8583Exception {
+	private Map<String, Object> toMap(byte[] dataPack, int bitMapLen, String charsetName) throws Pack8583Exception {
 		int mapLen = bitMapLen / 8;
 		Map<String, Object> map = new HashMap<String, Object>();
 		byte[] bitMap = new byte[mapLen];
@@ -136,10 +160,10 @@ public class Pack8583Converter {
 		for (int i = 0; i < mapLen; ++i) {
 			for (int j = 0; j < 8; ++j) {
 				int bitSeq = i * 8 + j + 1;
-				if ((bitMap[i] & (0X80 >> j)) == 0x00) {
+				if ((bitMap[i] & (0X80>> j)) == 0x00) {
 					continue;
 				}
-				Pack8583Dic p8583Dic = dataDic.get(bitSeq);
+				Pack8583Dic p8583Dic = dataDicMap.get(bitSeq);
 				if (p8583Dic == null) {
 					logger.error("数据字典缺失[" + bitSeq + "]");
 					throw new Pack8583Exception("数据字典缺失");
@@ -178,7 +202,7 @@ public class Pack8583Converter {
 
 	private Object unPackDataConv(ByteBuffer dataArea, String dataType, String lenType, int dataLen, int dataDec,
 			String charsetName) throws UnsupportedEncodingException {
-		//TODO
+		// TODO
 		Object dataValue = null;
 		byte[] dst = new byte[dataLen];
 		dataArea.get(dst, 0, dataLen);
@@ -191,4 +215,3 @@ public class Pack8583Converter {
 	}
 
 }
-

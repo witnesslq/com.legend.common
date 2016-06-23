@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.legend.com/Pack8583DicMap.xsd"
+	elementFormDefault="qualified">
+	<element name="Pack8583DicMap">
+		<complexType>
+			<sequence>
+				<element name="Pack8583Dic" maxOccurs="unbounded">
+					<complexType>
+						<sequence>
+							<!-- 序号 -->
+							<element name="BitSeq">						
+								<simpleType>
+									<restriction base="integer">
+										<minInclusive value="0" />
+										<maxInclusive value="128" />
+									</restriction>
+								</simpleType>
+							</element>
+							<!-- 数据编码 -->
+							<element name="DataCode">					
+								<simpleType>
+									<restriction base="string">
+										<pattern value="[0-9][0-9][0-9][0-9]" />
+									</restriction>
+								</simpleType>
+							</element>
+							<!-- 数据类型(0:二进制；1:数值；2:字符) -->
+							<element name="DataType">					
+								<simpleType>
+									<restriction base="string">
+										<pattern value="[0-9]" />
+									</restriction>
+								</simpleType>
+							</element>
+							<!-- 数据长度类型(0:定长；1:1位变长；2:2位变长3；3位变长) -->
+							<element name="LenType">					
+								<simpleType>
+									<restriction base="string">
+										<pattern value="[0-9]" />
+									</restriction>
+								</simpleType>
+							</element>
+							<!-- 数据长度 -->
+							<element name="DataLen">					
+								<simpleType>
+									<restriction base="integer">
+										<minInclusive value="0" />
+										<maxInclusive value="999" />
+									</restriction>
+								</simpleType>
+							</element>
+							<!-- 小数位数 -->
+							<element name="DataDec">					
+								<simpleType>
+									<restriction base="integer">
+										<minInclusive value="0" />
+										<maxInclusive value="2" />
+									</restriction>
+								</simpleType>
+							</element>
+							<!-- 数据域说明 -->
+							<element name="Desc" type="string" />		
+							<!-- 是否参与MAB运算 -->
+							<element name="MabTag" type="boolean" />	
+							<!-- 数据格式化标志 -->
+							<element name="Format">		
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="FillZeroLeft" />
+									</restriction>
+								</simpleType>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+			<!-- BIT图长度 -->
+			<attribute name="bitMapLen" type="integer" use="required"/>
+			<!-- BIT图是否可见 -->
+			<attribute name="bitMapVisable" type="boolean" use="required"/>
+		</complexType>
+	</element>
+</schema>
