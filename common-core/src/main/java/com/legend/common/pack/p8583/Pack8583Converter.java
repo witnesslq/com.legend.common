@@ -31,14 +31,6 @@ public class Pack8583Converter {
 	 */
 	public Pack8583Converter(String dataDicFilePath) throws Pack8583Exception {
 		try {
-			this.dataDicMap = loadDataDic(dataDicFilePath);
-		} catch (Pack8583Exception e) {
-			throw new Pack8583Exception(e);
-		}
-	}
-
-	private Map<Integer, Pack8583Dic> loadDataDic(String dataDicFilePath) throws Pack8583Exception {
-		try {
 			JAXBContext jc = JAXBContext.newInstance(Pack8583DicMap.class);
 			Unmarshaller ums = jc.createUnmarshaller();
 			this.pack8583DicMap = (Pack8583DicMap) ums.unmarshal(new File(dataDicFilePath));
@@ -46,18 +38,16 @@ public class Pack8583Converter {
 			logger.error("读取数据字典配置文件错误[" + dataDicFilePath + "]");
 			throw new Pack8583Exception("读取数据字典配置文件错误" + e);
 		}
-
-		Map<Integer, Pack8583Dic> map = new LinkedHashMap<Integer, Pack8583Dic>();
+		
+		this.dataDicMap = new LinkedHashMap<Integer, Pack8583Dic>();
 		List<Pack8583Dic> pack8583Dics = this.pack8583DicMap.getPack8583Dic();
 		for (Pack8583Dic pack8583Dic : pack8583Dics) {
-			map.put(pack8583Dic.getBitSeq(), pack8583Dic);
+			this.dataDicMap.put(pack8583Dic.getBitSeq(), pack8583Dic);
 		}
-
-		return map;
 	}
 
 	public byte[] to8583(Map<String, Object> dataMap) throws Pack8583Exception {
-		return to8583(dataMap, this.pack8583DicMap.getBitMapLen(), "UTF-8");
+		return to8583(dataMap, this.pack8583DicMap.getBitMapLen(), this.pack8583DicMap.getCharsetName());
 	}
 
 	private byte[] to8583(Map<String, Object> dataMap, int bitMapLen, String charsetName) throws Pack8583Exception {
@@ -121,6 +111,7 @@ public class Pack8583Converter {
 		try {
 			dataByte = s.getBytes(charsetName);
 		} catch (UnsupportedEncodingException e) {
+			logger.error("不支持的编码" + charsetName + e);
 			throw new UnsupportedEncodingException("不支持的编码" + charsetName + e);
 		}
 		byte[] dst = new byte[dataLen];
@@ -142,7 +133,7 @@ public class Pack8583Converter {
 	}
 
 	public Map<String, Object> toMap(byte[] dataPack) throws Pack8583Exception {
-		return toMap(dataPack, this.pack8583DicMap.getBitMapLen(), "UTF-8");
+		return toMap(dataPack, this.pack8583DicMap.getBitMapLen(), this.pack8583DicMap.getCharsetName());
 	}
 
 	private Map<String, Object> toMap(byte[] dataPack, int bitMapLen, String charsetName) throws Pack8583Exception {
@@ -209,6 +200,7 @@ public class Pack8583Converter {
 		try {
 			dataValue = new String(dst, charsetName);
 		} catch (UnsupportedEncodingException e) {
+			logger.error("不支持的编码" + charsetName + e);
 			throw new UnsupportedEncodingException("不支持的编码" + charsetName + e);
 		}
 		return dataValue;
