@@ -2,7 +2,7 @@
 <Pack8583DicMap xmlns="http://www.legend.com/Pack8583DicMap.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.legend.com/Pack8583DicMap.xsd Pack8583DicMap.xsd"
-	bitMapVisable="false" bitMapLen="64">
+	bitMapVisable="false" bitMapLen="64" charsetName="UTF-8">
 	<Pack8583Dic>
 		<BitSeq>2</BitSeq>
 		<DataCode>0020</DataCode>

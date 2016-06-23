@@ -13,8 +13,7 @@ public class Pack8583ConverterTest {
 
 	@Test
 	public void test8583() throws Pack8583Exception, UnsupportedEncodingException {
-		Pack8583Converter pack8583Converter = new Pack8583Converter(
-				Pack8583ConverterTest.class.getClassLoader().getResource("Pack8583DicMap.xml").getPath());
+		Pack8583Converter pack8583Converter = new Pack8583Converter("Pack8583DicMap.xml");
 		Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
 		dataMap.put("0020", "00001");
 		dataMap.put("0030", "0002");

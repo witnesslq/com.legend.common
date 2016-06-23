@@ -76,8 +76,10 @@
 			</sequence>
 			<!-- BIT图长度 -->
 			<attribute name="bitMapLen" type="integer" use="required"/>
-			<!-- BIT图是否可见 -->
+			<!-- BIT图是否可见 主要为兴业银银通考虑，暂预留，不实现-->
 			<attribute name="bitMapVisable" type="boolean" use="required"/>
+			<!-- 8583包编码格式 -->
+			<attribute name="charsetName" type="string" use="required"/>
 		</complexType>
 	</element>
 </schema>

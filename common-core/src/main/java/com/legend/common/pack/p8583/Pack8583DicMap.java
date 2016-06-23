@@ -25,6 +25,9 @@ public class Pack8583DicMap {
     
     @XmlAttribute(name = "bitMapVisable")
     private Boolean bitMapVisable;
+    
+    @XmlAttribute(name = "charsetName")
+    private String charsetName;
 
     public List<Pack8583Dic> getPack8583Dic() {
         if (pack8583Dic == null) {
@@ -32,20 +35,29 @@ public class Pack8583DicMap {
         }
         return this.pack8583Dic;
     }
-    
-    public Boolean isBitMapVisable() {
-        return bitMapVisable;
-    }
 
-    public void setBitMapVisable(Boolean value) {
-        this.bitMapVisable = value;
-    }
+	public int getBitMapLen() {
+		return bitMapLen;
+	}
 
-    public int getBitMapLen() {
-        return bitMapLen;
-    }
+	public void setBitMapLen(int bitMapLen) {
+		this.bitMapLen = bitMapLen;
+	}
 
-    public void setBitMapLen(int value) {
-        this.bitMapLen = value;
-    }
+	public Boolean getBitMapVisable() {
+		return bitMapVisable;
+	}
+
+	public void setBitMapVisable(Boolean bitMapVisable) {
+		this.bitMapVisable = bitMapVisable;
+	}
+
+	public String getCharsetName() {
+		return charsetName;
+	}
+
+	public void setCharsetName(String charsetName) {
+		this.charsetName = charsetName;
+	}
+
 }
