@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.legend.com/Pack8583DicMap.xsd"
+	xmlns:p="http://www.legend.com/Pack8583DicMap.xsd"
 	elementFormDefault="qualified">
+
 	<element name="Pack8583DicMap">
 		<complexType>
 			<sequence>
@@ -8,40 +10,42 @@
 					<complexType>
 						<sequence>
 							<!-- 序号 -->
-							<element name="BitSeq">						
-								<simpleType>
-									<restriction base="integer">
-										<minInclusive value="0" />
-										<maxInclusive value="128" />
-									</restriction>
-								</simpleType>
+							<element name="BitSeq">
+								<complexType mixed="true">
+									<simpleContent>
+										<extension base="p:BitSeq_Restriction">
+											<!-- 是否参与MAB运算 -->
+											<attribute name="mab" type="boolean" use="optional" />
+										</extension>
+									</simpleContent>
+								</complexType>
 							</element>
 							<!-- 数据编码 -->
-							<element name="DataCode">					
+							<element name="DataCode">
 								<simpleType>
 									<restriction base="string">
 										<pattern value="[0-9][0-9][0-9][0-9]" />
 									</restriction>
 								</simpleType>
 							</element>
-							<!-- 数据类型(0:二进制；1:数值；2:字符) -->
-							<element name="DataType">					
+							<!-- 数据类型(A:字符；B:二进制；N:数值；D:金额) -->
+							<element name="DataType">
 								<simpleType>
 									<restriction base="string">
-										<pattern value="[0-9]" />
+										<pattern value="[ABND]" />
 									</restriction>
 								</simpleType>
 							</element>
 							<!-- 数据长度类型(0:定长；1:1位变长；2:2位变长3；3位变长) -->
-							<element name="LenType">					
+							<element name="LenType">
 								<simpleType>
 									<restriction base="string">
-										<pattern value="[0-9]" />
+										<pattern value="[0123]" />
 									</restriction>
 								</simpleType>
 							</element>
 							<!-- 数据长度 -->
-							<element name="DataLen">					
+							<element name="DataLen">
 								<simpleType>
 									<restriction base="integer">
 										<minInclusive value="0" />
@@ -50,7 +54,7 @@
 								</simpleType>
 							</element>
 							<!-- 小数位数 -->
-							<element name="DataDec">					
+							<element name="DataDec">
 								<simpleType>
 									<restriction base="integer">
 										<minInclusive value="0" />
@@ -59,14 +63,14 @@
 								</simpleType>
 							</element>
 							<!-- 数据域说明 -->
-							<element name="Desc" type="string" />		
-							<!-- 是否参与MAB运算 -->
-							<element name="MabTag" type="boolean" />	
+							<element name="Desc" type="string" />
 							<!-- 数据格式化标志 -->
-							<element name="Format">		
+							<element name="Format" minOccurs="0" maxOccurs="1">
 								<simpleType>
 									<restriction base="string">
-										<enumeration value="FillZeroLeft" />
+										<enumeration value="zero" />
+										<enumeration value="point" />
+										<enumeration value="space" />
 									</restriction>
 								</simpleType>
 							</element>
@@ -75,11 +79,17 @@
 				</element>
 			</sequence>
 			<!-- BIT图长度 -->
-			<attribute name="bitMapLen" type="integer" use="required"/>
-			<!-- BIT图是否可见 主要为兴业银银通考虑，暂预留，不实现-->
-			<attribute name="bitMapVisable" type="boolean" use="required"/>
+			<attribute name="bitMapLen" type="integer" use="required" />
+			<!-- BIT图是否可见 主要为兴业银银通考虑，暂预留，不实现 -->
+			<attribute name="bitMapVisable" type="boolean" use="required" />
 			<!-- 8583包编码格式 -->
-			<attribute name="charsetName" type="string" use="required"/>
+			<attribute name="charsetName" type="string" use="required" />
 		</complexType>
 	</element>
+	<simpleType name="BitSeq_Restriction">
+		<restriction base="integer">
+			<minInclusive value="0" />
+			<maxInclusive value="128" />
+		</restriction>
+	</simpleType>
 </schema>

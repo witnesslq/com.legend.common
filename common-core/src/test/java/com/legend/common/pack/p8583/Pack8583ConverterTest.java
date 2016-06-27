@@ -15,18 +15,23 @@ public class Pack8583ConverterTest {
 	public void test8583() throws Pack8583Exception, UnsupportedEncodingException {
 		Pack8583Converter pack8583Converter = new Pack8583Converter("Pack8583DicMap.xml");
 		Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
+		dataMap.put("MSGID", "0010");
 		dataMap.put("0020", "00001");
-		dataMap.put("0030", "0002");
-//		dataMap.put("0070", "110011");
-//		dataMap.put("0370", "621238787346445453");
-//		dataMap.put("0540", "周勇沩");
-//		dataMap.put("0640", "ABCDEF");
+		dataMap.put("0030", "000002");
+		dataMap.put("0040", 123.45);
+		dataMap.put("0070", 123);
+		dataMap.put("0370", "621231123123");
+		dataMap.put("0570", "周勇沩1哈哈");
+		dataMap.put("1020", "ABCDEF");
+		dataMap.put("1280", "EEEEEEEE".getBytes());
 		byte[] pack8583 = pack8583Converter.to8583(dataMap);
 		String s = new String(pack8583, "UTF-8");
 		System.out.println("PACK=[" + s + "][" + pack8583.length + "]");
+		System.out.println("MAB=["+dataMap.get("MAB")+"]");
 		System.out.println("=======================================");
 		dataMap = pack8583Converter.toMap(pack8583);
 		System.out.println(dataMap);
+		System.out.println("MAB=["+dataMap.get("MAB")+"]");
 	}
 
 }

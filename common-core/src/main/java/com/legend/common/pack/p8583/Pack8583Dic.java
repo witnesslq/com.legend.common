@@ -2,123 +2,131 @@ package com.legend.common.pack.p8583;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "bitSeq",
-    "dataCode",
-    "dataType",
-    "lenType",
-    "dataLen",
-    "dataDec",
-    "desc",
-    "mabTag",
-    "format"
-})
-class Pack8583Dic {
+@XmlType(name = "", propOrder = { 
+		"bitSeq", 
+		"dataCode", 
+		"dataType", 
+		"lenType", 
+		"dataLen", 
+		"dataDec", 
+		"desc", 
+		"format" })
+public class Pack8583Dic {
 
 	@XmlElement(name = "BitSeq", required = true)
-	private int bitSeq; 
-
+	protected BitSeq bitSeq;
 	@XmlElement(name = "DataCode", required = true)
-	private String dataCode; // 数据编码
-
+	protected String dataCode;
 	@XmlElement(name = "DataType", required = true)
-	private String dataType; // 数据类型(0:二进制；1:数值；2:字符)
-
+	protected String dataType;
 	@XmlElement(name = "LenType", required = true)
-	private String lenType; // 数据长度类型(0:定长;1:1位变长;2:2位变长3:3位变长)
-
-	@XmlElement(name = "DataLen", required = true)
-	private int dataLen; // 数据长度
-
-	@XmlElement(name = "DataDec", required = true)
-	private int dataDec; // 数据小数位数
-
+	protected String lenType;
+	@XmlElement(name = "DataLen")
+	protected int dataLen;
+	@XmlElement(name = "DataDec")
+	protected int dataDec;
 	@XmlElement(name = "Desc", required = true)
-	private String desc; // 说明
+	protected String desc;
+	@XmlElement(name = "Format")
+	protected String format;
 
-	@XmlElement(name = "MabTag", required = true)
-	private Boolean mabTag;
-
-	@XmlElement(name = "Format", required = true)
-	private String format;
-
-
-	public int getBitSeq() {
+	public BitSeq getBitSeq() {
 		return bitSeq;
 	}
 
-	public void setBitSeq(int bitSeq) {
-		this.bitSeq = bitSeq;
+	public void setBitSeq(BitSeq value) {
+		this.bitSeq = value;
 	}
 
 	public String getDataCode() {
 		return dataCode;
 	}
 
-	public void setDataCode(String dataCode) {
-		this.dataCode = dataCode;
+	public void setDataCode(String value) {
+		this.dataCode = value;
 	}
 
 	public String getDataType() {
 		return dataType;
 	}
 
-	public void setDataType(String dataType) {
-		this.dataType = dataType;
+	public void setDataType(String value) {
+		this.dataType = value;
 	}
 
 	public String getLenType() {
 		return lenType;
 	}
 
-	public void setLenType(String lenType) {
-		this.lenType = lenType;
+	public void setLenType(String value) {
+		this.lenType = value;
 	}
 
 	public int getDataLen() {
 		return dataLen;
 	}
 
-	public void setDataLen(int dataLen) {
-		this.dataLen = dataLen;
+	public void setDataLen(int value) {
+		this.dataLen = value;
 	}
 
 	public int getDataDec() {
 		return dataDec;
 	}
 
-	public void setDataDec(int dataDec) {
-		this.dataDec = dataDec;
+	public void setDataDec(int value) {
+		this.dataDec = value;
 	}
 
 	public String getDesc() {
 		return desc;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-
-	public Boolean getMabTag() {
-		return mabTag;
-	}
-
-	public void setMabTag(Boolean mabTag) {
-		this.mabTag = mabTag;
+	public void setDesc(String value) {
+		this.desc = value;
 	}
 
 	public String getFormat() {
 		return format;
 	}
 
-	public void setFormatClass(String format) {
-		this.format = format;
+	public void setFormat(String value) {
+		this.format = value;
 	}
-	
-	
+
+
+}
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = { "value" })
+class BitSeq {
+
+	@XmlValue
+	protected int value;
+	@XmlAttribute(name = "mab")
+	protected Boolean mab = false;
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public Boolean isMab() {
+		return mab;
+	}
+
+	public void setMab(Boolean value) {
+		this.mab = value;
+	}
 
 }

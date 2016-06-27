@@ -2,6 +2,8 @@ package com.legend.common.exception;
 
 public class Pack8583Exception extends Exception {
 
+	private static final long serialVersionUID = 4463163771226232236L;
+
 	public Pack8583Exception() {
 		// TODO Auto-generated constructor stub
 	}
