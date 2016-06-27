@@ -82,6 +82,26 @@ public class DataUtilTest {
 		}
 		
 	}
+	
+	@Test
+	public void testFillZeroLeft() {
+		System.out.println("["+DataUtil.fillZeroLeft(1000000000, 12)+"]");
+	}
+
+	@Test
+	public void fillSpaceRight() {
+		System.out.println("["+DataUtil.fillSpaceRight("22", 10)+"]");
+	}
+
+	@Test
+	public void removePoint() {
+		System.out.println("["+DataUtil.removePoint(123456.1211, 12, 2)+"]");
+	}
+	
+	@Test
+	public void addPoint() {
+		System.out.println("["+DataUtil.addPoint(123456d, 12, 2)+"]");
+	}
 
 }
 
@@ -192,5 +212,7 @@ class Templ {
 		}
 		return false;
 	}
+	
+
 
 }
