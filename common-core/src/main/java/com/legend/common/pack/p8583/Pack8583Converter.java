@@ -60,6 +60,10 @@ public class Pack8583Converter {
 		int mapLen = bitMapLen / 8;
 		String msgId = (String) dataMap.get("MSGID");
 		logger.info("MSGID=[" + msgId + "]");
+		if(msgId==null){
+			logger.error("MSGID未设置");
+			throw new Pack8583Exception("MSGID未设置");
+		}
 		byte[] bitMap = new byte[mapLen + 4];
 		System.arraycopy(msgId.getBytes(), 0, bitMap, 0, 4);
 		byte[] dataArea = null;

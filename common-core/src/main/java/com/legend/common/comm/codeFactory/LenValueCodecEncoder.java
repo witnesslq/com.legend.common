@@ -9,6 +9,8 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.legend.common.utils.DataUtil;
+
 //编码
 public class LenValueCodecEncoder extends ProtocolEncoderAdapter {
 	
@@ -23,12 +25,13 @@ public class LenValueCodecEncoder extends ProtocolEncoderAdapter {
 
 	@Override
 	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
-		int len = message.toString().length();
-		StringBuffer sb = new StringBuffer(String.format("%0"+this.valueLen+"d", len));
-		sb.append(message);
-		logger.info("转码后待发送数据=["+sb.toString()+"]");
+		byte[] mb = (byte[]) message;
+		int len = mb.length;
+		String sLen = DataUtil.fillZeroLeft(len,8);
+		logger.info("转码后待发送数据=["+new String(mb)+"]");
 		IoBuffer buffer = IoBuffer.allocate(len+this.valueLen);
-		buffer.put(sb.toString().getBytes(this.charset));
+		buffer.put(sLen.getBytes());
+		buffer.put(mb);
 		buffer.flip();
 		out.write(buffer);
 	}

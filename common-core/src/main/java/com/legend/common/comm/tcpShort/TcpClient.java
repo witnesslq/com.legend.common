@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.legend.common.comm.codeFactory.LenValueCodecFactory;
 import com.legend.common.exception.TcpShortException;
+import com.legend.common.exception.TcpShortTimeOutException;
 
 public class TcpClient {
 
@@ -85,7 +86,7 @@ public class TcpClient {
 
 	}
 
-	public Object comm(IoSession session, Object send) {
+	public Object comm(IoSession session, Object send) throws TcpShortTimeOutException {
 
 		session.write(send).awaitUninterruptibly();
 
@@ -93,11 +94,11 @@ public class TcpClient {
 
 		if (readFuture.awaitUninterruptibly(this.targetSystem.getWaitTimeout(), TimeUnit.SECONDS)) {
 			Object message = readFuture.getMessage();
-			logger.info("收到消息[" + message + "]");
+			logger.info("收到消息[" + new String((byte[])message) + "]");
 			return message;
 		} else {
-			logger.info("收到消息超时");
-			return null;
+			logger.info("通讯超时");
+			throw new TcpShortTimeOutException("通讯超时");
 		}
 
 	}
