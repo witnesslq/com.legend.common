@@ -65,7 +65,9 @@ public class LenValueCodecDecoder extends ProtocolDecoderAdapter {
 		if(remainLen==0 && len>this.lenValue){
 			bufferContext.flip();
 			try{
-				out.write(bufferContext.getString(this.charset.newDecoder()));
+				byte[] dst = new byte[bufferContext.remaining()];
+				bufferContext.get(dst);
+				out.write(dst);
 			}finally{
 				context.reset();
 			}
