@@ -1,4 +1,4 @@
-package com.legend.common.pack;
+package com.legend.common.pack.pXml;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

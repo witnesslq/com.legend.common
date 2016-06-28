@@ -1,4 +1,4 @@
-package com.legend.common.pack;
+package com.legend.common.pack.pXml;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +16,7 @@ import com.legend.common.model.beps.beps_121_001_01.CustomerCreditTransfer;
 import com.legend.common.model.beps.beps_121_001_01.Document;
 import com.legend.common.model.beps.beps_121_001_01.ObjectFactory;
 import com.legend.common.model.beps.beps_121_001_01.PKGGroupHeader1;
+import com.legend.common.pack.pXml.PackXmlConverter;
 
 public class PackXmlConverter2Test {
 

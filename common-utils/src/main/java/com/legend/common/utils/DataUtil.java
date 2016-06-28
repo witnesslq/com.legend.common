@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 
@@ -89,6 +88,23 @@ public class DataUtil {
 			}
 		}
 		return model;
+	}
+	
+	public static String fillZeroLeft(Integer source , int dataLen) {
+		return String.format("%0"+dataLen+"d", source);
+	}
+	
+	public static String fillSpaceRight(String source, int dataLen) {
+		return String.format("%-"+dataLen+"s", source);
+	}
+	
+	public static String removePoint(Double source, int dataLen, int dec) {
+		Double d = source*Math.pow(10, dec);
+		return String.format("%0"+dataLen+"d", Math.round(d));
+	}
+	
+	public static Double addPoint(Double source, int dataLen, int dec) {
+		return source / Math.pow(10, dec);
 	}
 
 }
