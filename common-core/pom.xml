@@ -11,7 +11,7 @@
 	<artifactId>common-core</artifactId>
 	<name>common-core</name>
 	<packaging>jar</packaging>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 
 	<dependencies>
 		<dependency>
@@ -51,8 +51,8 @@
 		<dependency>
 			<groupId>com.legend.common</groupId>
 			<artifactId>common-utils</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+			<version>1.1.0</version>
+		</dependency> 
 	</dependencies>
 
 </project> 
