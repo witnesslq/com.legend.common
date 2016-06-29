@@ -43,7 +43,7 @@ public class Pack8583Converter {
 			throw new Pack8583Exception("读取数据字典配置文件错误" + e);
 		}
 
-		this.dataDicMap = new LinkedHashMap<Integer, Pack8583Dic>();
+		this.dataDicMap = new HashMap<Integer, Pack8583Dic>();
 		List<Pack8583Dic> pack8583Dics = this.pack8583DicMap.getPack8583Dic();
 		for (Pack8583Dic pack8583Dic : pack8583Dics) {
 			this.dataDicMap.put(pack8583Dic.getBitSeq().getValue(), pack8583Dic);
