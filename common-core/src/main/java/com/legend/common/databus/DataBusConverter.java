@@ -95,16 +95,18 @@ public class DataBusConverter {
 		logger.info("数据转换配置文件初始化完成");
 	}
 
-	public DataBus toDataBus(String idConv, Map<String, Object> src) throws ConvConfigNotFoundException, IllegalDataBusKeyException, IllegalDataBusTypeException { // map转换
+	public void toDataBus(String idConv, Map<String, Object> src,DataBus dataBus) throws ConvConfigNotFoundException, IllegalDataBusKeyException, IllegalDataBusTypeException { // map转换
 		Map<String, String> convMap = this.conv.get(idConv);
 		if (convMap == null) {
 			logger.error("转换标识[" + idConv + "]尚未配置");
 			throw new ConvConfigNotFoundException("转换标识[" + idConv + "]尚未配置");
 		}
-		DataBus dataBus = new DataBus();
 		Set<Entry<String, Object>> entries = src.entrySet();
 		for (Entry<String, Object> entry : entries) {
 			String key = convMap.get(entry.getKey());
+			if(key==null){
+				continue;
+			}
 			Object value = entry.getValue();
 			try {
 				dataBusValidate(key, value);
@@ -115,19 +117,20 @@ public class DataBusConverter {
 			}
 			dataBus.put(key, value);
 		}
-		return dataBus;
 	}
 
-	public Map<String, Object> toMap(String idConv, DataBus dataBus) throws IllegalDataBusKeyException, IllegalDataBusTypeException, ConvConfigNotFoundException {
+	public void toMap(String idConv, DataBus dataBus,Map<String, Object> map) throws IllegalDataBusKeyException, IllegalDataBusTypeException, ConvConfigNotFoundException {
 		Map<String, String> convMap = this.conv.get(idConv);
 		if (convMap == null) {
 			logger.error("转换标识[" + idConv + "]尚未配置");
 			throw new ConvConfigNotFoundException("转换标识[" + idConv + "]尚未配置");
 		}
-		Map<String, Object> map = new HashMap<String,Object>();
 		Set<Map.Entry<String, Object>> entries = dataBus.entrySet();
 		for (Entry<String, Object> entry : entries) {
 			String key = convMap.get(entry.getKey());
+			if(key==null){
+				continue;
+			}
 			Object value = entry.getValue();
 			try {
 				dataBusValidate(entry.getKey(), value);
@@ -138,7 +141,6 @@ public class DataBusConverter {
 			}
 			map.put(key, value);
 		}
-		return map;
 	}
 
 	private void dataBusValidate(String key, Object value)

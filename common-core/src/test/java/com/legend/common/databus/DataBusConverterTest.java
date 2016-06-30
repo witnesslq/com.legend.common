@@ -18,9 +18,11 @@ public class DataBusConverterTest {
 		DataBusConverter dataBusConverter = new DataBusConverter("DataDicMap.xml","conv");
 		Map<String,Object> src = new HashMap<String,Object>();
 		src.put("/Cartoon/CpReq/id", "123");
-		DataBus dataBus = dataBusConverter.toDataBus("CpReq_I", src);
+		DataBus dataBus = new DataBus();
+		dataBusConverter.toDataBus("CpReq_I", src,dataBus);
 		System.out.println(dataBus);
-		Map<String,Object> des = dataBusConverter.toMap("CpReq_O", dataBus);
+		Map<String,Object> des = new HashMap<String,Object>();
+		dataBusConverter.toMap("CpReq_O", dataBus,des);
 		System.out.println(des);
 		System.out.println(des.get("/Cartoon/CpReq/id/dd"));
 	}
