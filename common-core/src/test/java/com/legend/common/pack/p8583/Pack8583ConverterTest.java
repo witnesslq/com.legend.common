@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.legend.common.config.config;
 import com.legend.common.exception.Pack8583Exception;
 import com.legend.common.pack.p8583.Pack8583Converter;
 
@@ -13,7 +14,7 @@ public class Pack8583ConverterTest {
 
 	@Test
 	public void test8583() throws Pack8583Exception, UnsupportedEncodingException {
-		Pack8583Converter pack8583Converter = new Pack8583Converter("Pack8583DicMap.xml");
+		Pack8583Converter pack8583Converter = new Pack8583Converter(config.TPS_CONFIG+"/host/Pack8583DicMap.xml");
 		Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
 		dataMap.put("MSGID", "0010");
 		dataMap.put("0020", "00001");

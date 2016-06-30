@@ -46,7 +46,7 @@ public class MinaServiceHandler extends IoHandlerAdapter {
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		logger.info("收到请求信息=["+message+"]");
-		session.write(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+		session.write(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).getBytes());
 		session.close();
 	}
 

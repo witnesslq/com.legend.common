@@ -38,7 +38,8 @@ public class TcpClient {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(TargetSystem.class);
 			Unmarshaller ums = jc.createUnmarshaller();
-			targeSystemFilePath = TcpClient.class.getClassLoader().getResource(targeSystemFileName).getPath();
+		//	targeSystemFilePath = TcpClient.class.getClassLoader().getResource(targeSystemFileName).getPath();
+			         targeSystemFilePath = targeSystemFileName;
 			logger.info("装载目标系统通讯信息[" + targeSystemFilePath + "]");
 			this.targetSystem = (TargetSystem) ums.unmarshal(new File(targeSystemFilePath));
 		} catch (JAXBException e) {

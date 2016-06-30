@@ -24,7 +24,7 @@ public class Pack8583Converter {
 
 	private static Logger logger = LoggerFactory.getLogger(Pack8583Converter.class);
 
-	private Map<Integer, Pack8583Dic> dataDicMap; // 8583数据字典
+	private Map<Integer, Pack8583Dic> dataDicMap = new HashMap<Integer, Pack8583Dic>(); // 8583数据字典
 	private Pack8583DicMap pack8583DicMap;
 
 	/*
@@ -32,10 +32,14 @@ public class Pack8583Converter {
 	 */
 	public Pack8583Converter(String dataDicFileName) throws Pack8583Exception {
 		String dataDicFilePath = null;
+		if (dataDicFileName == null) {
+			logger.error("读取数据字典配置文件错误");
+		}
 		try {
 			JAXBContext jc = JAXBContext.newInstance(Pack8583DicMap.class);
 			Unmarshaller ums = jc.createUnmarshaller();
-			dataDicFilePath = Pack8583Converter.class.getClassLoader().getResource(dataDicFileName).getPath();
+			//dataDicFilePath = Pack8583Converter.class.getClassLoader().getResource(dataDicFileName).getPath();
+			dataDicFilePath = dataDicFileName;
 			logger.info("装载8583数据字典[" + dataDicFilePath + "]");
 			this.pack8583DicMap = (Pack8583DicMap) ums.unmarshal(new File(dataDicFilePath));
 		} catch (JAXBException e) {
@@ -43,7 +47,6 @@ public class Pack8583Converter {
 			throw new Pack8583Exception("读取数据字典配置文件错误" + e);
 		}
 
-		this.dataDicMap = new HashMap<Integer, Pack8583Dic>();
 		List<Pack8583Dic> pack8583Dics = this.pack8583DicMap.getPack8583Dic();
 		for (Pack8583Dic pack8583Dic : pack8583Dics) {
 			this.dataDicMap.put(pack8583Dic.getBitSeq().getValue(), pack8583Dic);
@@ -60,7 +63,7 @@ public class Pack8583Converter {
 		int mapLen = bitMapLen / 8;
 		String msgId = (String) dataMap.get("MSGID");
 		logger.info("MSGID=[" + msgId + "]");
-		if(msgId==null){
+		if (msgId == null) {
 			logger.error("MSGID未设置");
 			throw new Pack8583Exception("MSGID未设置");
 		}
@@ -336,7 +339,12 @@ public class Pack8583Converter {
 		Object dataValue = null;
 		switch (dataType.charAt(0)) {
 		case 'A': // 字符
-			dataValue = new String(dst).trim();
+			try {
+				dataValue = new String(dst,charsetName).trim();
+			} catch (UnsupportedEncodingException e) {
+				logger.error("不支持的编码格式" + charsetName + e);
+				throw new DataConvException("不支持的编码格式" + charsetName + e);
+			}
 			break;
 		case 'B': // 二进制
 			dataValue = dst;

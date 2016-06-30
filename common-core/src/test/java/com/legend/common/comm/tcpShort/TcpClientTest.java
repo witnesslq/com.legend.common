@@ -4,6 +4,7 @@ import org.apache.mina.core.session.IoSession;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.legend.common.config.config;
 import com.legend.common.exception.TcpShortException;
 import com.legend.common.exception.TcpShortTimeOutException;
 
@@ -16,9 +17,9 @@ public class TcpClientTest {
 
 	@Test
 	public void testConnect() throws TcpShortException, TcpShortTimeOutException {
-		TcpClient tcpClient = new TcpClient("TcpShortTargetSystem.xml");
+		TcpClient tcpClient = new TcpClient(config.TPS_CONFIG+"host/TcpShortTargetSystem.xml");
 		IoSession session = tcpClient.connect();
-		Object bb = tcpClient.comm(session, "ABC");
+		Object bb = tcpClient.comm(session, "ABC".getBytes());
 		System.out.println(bb);
 		tcpClient.disconnect(session);
 	}

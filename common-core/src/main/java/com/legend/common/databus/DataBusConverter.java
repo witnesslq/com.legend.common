@@ -28,47 +28,51 @@ public class DataBusConverter {
 
 	private static Logger logger = LoggerFactory.getLogger(DataBusConverter.class);
 
-	private Map<String, Map<String, String>> conv;
-	private Map<String, DataDic> validateMap; // 数据总线数据字典，在进行数据总线导入导出时进行类型检查
+	private Map<String, Map<String, String>> conv = new HashMap<String, Map<String, String>>();
+	private Map<String, DataDic> validateMap = new HashMap<String, DataDic>(); // 数据总线数据字典，在进行数据总线导入导出时进行类型检查
 
 	public DataBusConverter(String dataDicFileName, String convFileDirectName)
 			throws DataBusLoadException, DataConvLoadException {
 
 		loadDataBusValidateMap(dataDicFileName);
+		logger.info("数据总线数据字典初始化完成");
 
 		loadDataConvMap(convFileDirectName);
+		logger.info("数据转换配置文件初始化完成");
 
 	}
 
-	private void loadDataBusValidateMap(String dataDicFileName) throws DataBusLoadException {
+	private void loadDataBusValidateMap(String dataDicFilePath) throws DataBusLoadException {
 		DataDicMap dataDicMap = null;
-		String dataDicFilePath = null;
+		if(dataDicFilePath == null){
+			logger.error("读取数据总线数据字典配置文件错误[" + dataDicFilePath + "]");
+			throw new DataBusLoadException("读取数据总线数据字典配置文件错误");
+		}
 		try {
 			JAXBContext jc = JAXBContext.newInstance(DataDicMap.class);
 			Unmarshaller ums = jc.createUnmarshaller();
-			dataDicFilePath = DataBusConverter.class.getClassLoader().getResource(dataDicFileName).getPath();
 			logger.info("装载总线数据字典[" + dataDicFilePath + "]");
 			dataDicMap = (DataDicMap) ums.unmarshal(new File(dataDicFilePath));
 		} catch (JAXBException e) {
-			logger.error("读取数据总线数据字典配置文件错误[" + dataDicFilePath + "][" + dataDicFileName + "]" + e);
+			logger.error("读取数据总线数据字典配置文件错误[" + dataDicFilePath + "]" + e);
 			throw new DataBusLoadException("读取数据总线数据字典配置文件错误" + e);
 		}
 
-		this.validateMap = new HashMap<String, DataDic>();
 		List<DataDic> dataDics = dataDicMap.getDataDic();
 		for (DataDic dataDic : dataDics) {
 			this.validateMap.put(dataDic.getDataCode(), dataDic);
 		}
-		logger.info("数据总线数据字典初始化完成");
+
 	}
 
-	private void loadDataConvMap(String convFileDirectName) throws DataConvLoadException {
-		String convFileDirectPath = null;
+	private void loadDataConvMap(String convFileDirectPath) throws DataConvLoadException {
+		if(convFileDirectPath == null){
+			logger.error("读取数据转换配置文件错误[" + convFileDirectPath + "]");
+			throw new DataConvLoadException("读取数据转换配置文件错误");
+		}
 		try {
 			JAXBContext jc = JAXBContext.newInstance(DataConvMap.class);
 			Unmarshaller ums = jc.createUnmarshaller();
-			convFileDirectPath = DataBusConverter.class.getClassLoader().getResource(convFileDirectName).getPath();
-			this.conv = new HashMap<String, Map<String, String>>();
 			logger.info("装载数据转换配置文件目录[" + convFileDirectPath + "]");
 			File file = new File(convFileDirectPath);
 			File[] fileList = file.listFiles();
@@ -86,13 +90,15 @@ public class DataBusConverter {
 						map.put(dataConv.getSource(), dataConv.getDestination());
 					}
 					this.conv.put(key, map);
+				}else if(fileList[i].isDirectory()){
+					loadDataConvMap(fileList[i].getPath());
 				}
 			}
 		} catch (JAXBException e) {
 			logger.error("读取数据转换配置文件错误[" + convFileDirectPath + "]" + e);
 			throw new DataConvLoadException("读取数据转换配置文件错误" + e);
 		}
-		logger.info("数据转换配置文件初始化完成");
+
 	}
 
 	public void toDataBus(String idConv, Map<String, Object> src,DataBus dataBus) throws ConvConfigNotFoundException, IllegalDataBusKeyException, IllegalDataBusTypeException { // map转换
