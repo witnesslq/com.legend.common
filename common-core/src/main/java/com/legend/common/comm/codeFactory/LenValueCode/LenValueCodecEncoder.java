@@ -1,4 +1,4 @@
-package com.legend.common.comm.codeFactory;
+package com.legend.common.comm.codeFactory.LenValueCode;
 
 import java.nio.charset.Charset;
 
@@ -28,7 +28,7 @@ public class LenValueCodecEncoder extends ProtocolEncoderAdapter {
 		byte[] mb = (byte[]) message;
 		int len = mb.length;
 		String sLen = DataUtil.fillZeroLeft(len,8);
-		logger.info("转码后待发送数据=["+new String(mb)+"]");
+		logger.info("转码后待发送数据=["+new String(mb,"UTF-8")+"]");
 		IoBuffer buffer = IoBuffer.allocate(len+this.valueLen);
 		buffer.put(sLen.getBytes());
 		buffer.put(mb);

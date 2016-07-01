@@ -18,11 +18,9 @@ import com.legend.common.databus.dataconv.DataConv;
 import com.legend.common.databus.dataconv.DataConvMap;
 import com.legend.common.databus.datadic.DataDic;
 import com.legend.common.databus.datadic.DataDicMap;
-import com.legend.common.exception.ConvConfigNotFoundException;
 import com.legend.common.exception.DataBusLoadException;
 import com.legend.common.exception.DataConvLoadException;
-import com.legend.common.exception.IllegalDataBusKeyException;
-import com.legend.common.exception.IllegalDataBusTypeException;
+import com.legend.common.exception.DatabusConvException;
 
 public class DataBusConverter {
 
@@ -35,18 +33,17 @@ public class DataBusConverter {
 			throws DataBusLoadException, DataConvLoadException {
 
 		loadDataBusValidateMap(dataDicFileName);
-		logger.info("数据总线数据字典初始化完成");
+		logger.info("装载数据总线数据字典配置文件成功！！！");
 
 		loadDataConvMap(convFileDirectName);
-		logger.info("数据转换配置文件初始化完成");
+		logger.info("装载数据转换配置文件成功！！！");
 
 	}
 
 	private void loadDataBusValidateMap(String dataDicFilePath) throws DataBusLoadException {
 		DataDicMap dataDicMap = null;
-		if(dataDicFilePath == null){
-			logger.error("读取数据总线数据字典配置文件错误[" + dataDicFilePath + "]");
-			throw new DataBusLoadException("读取数据总线数据字典配置文件错误");
+		if (dataDicFilePath == null) {
+			throw new DataBusLoadException("装载数据总线数据字典配置文件错误[" + dataDicFilePath + "]");
 		}
 		try {
 			JAXBContext jc = JAXBContext.newInstance(DataDicMap.class);
@@ -54,26 +51,23 @@ public class DataBusConverter {
 			logger.info("装载总线数据字典[" + dataDicFilePath + "]");
 			dataDicMap = (DataDicMap) ums.unmarshal(new File(dataDicFilePath));
 		} catch (JAXBException e) {
-			logger.error("读取数据总线数据字典配置文件错误[" + dataDicFilePath + "]" + e);
-			throw new DataBusLoadException("读取数据总线数据字典配置文件错误" + e);
+			throw new DataBusLoadException("装载数据总线数据字典配置文件错误[" + dataDicFilePath + "]"+e);
 		}
 
 		List<DataDic> dataDics = dataDicMap.getDataDic();
 		for (DataDic dataDic : dataDics) {
 			this.validateMap.put(dataDic.getDataCode(), dataDic);
 		}
-
 	}
 
 	private void loadDataConvMap(String convFileDirectPath) throws DataConvLoadException {
-		if(convFileDirectPath == null){
-			logger.error("读取数据转换配置文件错误[" + convFileDirectPath + "]");
-			throw new DataConvLoadException("读取数据转换配置文件错误");
+		if (convFileDirectPath == null) {
+			throw new DataConvLoadException("装载数据转换配置文件错误[" + convFileDirectPath + "]");
 		}
 		try {
 			JAXBContext jc = JAXBContext.newInstance(DataConvMap.class);
 			Unmarshaller ums = jc.createUnmarshaller();
-			logger.info("装载数据转换配置文件目录[" + convFileDirectPath + "]");
+			logger.info("数据转换配置文件目录[" + convFileDirectPath + "]");
 			File file = new File(convFileDirectPath);
 			File[] fileList = file.listFiles();
 			for (int i = 0; i < fileList.length; i++) {
@@ -90,82 +84,70 @@ public class DataBusConverter {
 						map.put(dataConv.getSource(), dataConv.getDestination());
 					}
 					this.conv.put(key, map);
-				}else if(fileList[i].isDirectory()){
+				} else if (fileList[i].isDirectory()) {
 					loadDataConvMap(fileList[i].getPath());
 				}
 			}
 		} catch (JAXBException e) {
-			logger.error("读取数据转换配置文件错误[" + convFileDirectPath + "]" + e);
-			throw new DataConvLoadException("读取数据转换配置文件错误" + e);
+			throw new DataConvLoadException("装载数据转换配置文件错误[" + convFileDirectPath + "]"+e);
 		}
 
 	}
 
-	public void toDataBus(String idConv, Map<String, Object> src,DataBus dataBus) throws ConvConfigNotFoundException, IllegalDataBusKeyException, IllegalDataBusTypeException { // map转换
+	public void toDataBus(String idConv, Map<String, Object> src, DataBus dataBus)
+			throws DatabusConvException { // map转换
 		Map<String, String> convMap = this.conv.get(idConv);
 		if (convMap == null) {
-			logger.error("转换标识[" + idConv + "]尚未配置");
-			throw new ConvConfigNotFoundException("转换标识[" + idConv + "]尚未配置");
+			throw new DatabusConvException("转换标识[" + idConv + "]尚未配置");
 		}
 		Set<Entry<String, Object>> entries = src.entrySet();
 		for (Entry<String, Object> entry : entries) {
 			String key = convMap.get(entry.getKey());
-			if(key==null){
+			if (key == null) {
 				continue;
 			}
 			Object value = entry.getValue();
-			try {
-				dataBusValidate(key, value);
-			} catch (IllegalDataBusKeyException e) {
-				throw new IllegalDataBusKeyException(e);
-			} catch (IllegalDataBusTypeException e) {
-				throw new IllegalDataBusTypeException(e);
-			}
+			dataBusValidate(key, value);
 			dataBus.put(key, value);
 		}
 	}
 
-	public void toMap(String idConv, DataBus dataBus,Map<String, Object> map) throws IllegalDataBusKeyException, IllegalDataBusTypeException, ConvConfigNotFoundException {
+	public void toMap(String idConv, DataBus dataBus, Map<String, Object> map)
+			throws DatabusConvException {
 		Map<String, String> convMap = this.conv.get(idConv);
 		if (convMap == null) {
-			logger.error("转换标识[" + idConv + "]尚未配置");
-			throw new ConvConfigNotFoundException("转换标识[" + idConv + "]尚未配置");
+			throw new DatabusConvException("转换标识[" + idConv + "]尚未配置");
 		}
 		Set<Map.Entry<String, Object>> entries = dataBus.entrySet();
 		for (Entry<String, Object> entry : entries) {
 			String key = convMap.get(entry.getKey());
-			if(key==null){
+			if (key == null) {
 				continue;
 			}
 			Object value = entry.getValue();
-			try {
-				dataBusValidate(entry.getKey(), value);
-			} catch (IllegalDataBusKeyException e) {
-				throw new IllegalDataBusKeyException(e);
-			} catch (IllegalDataBusTypeException e) {
-				throw new IllegalDataBusTypeException(e);
-			}
+			dataBusValidate(entry.getKey(), value);
 			map.put(key, value);
 		}
 	}
 
 	private void dataBusValidate(String key, Object value)
-			throws IllegalDataBusKeyException, IllegalDataBusTypeException {
+			throws DatabusConvException {
+		if(value==null || value==null){
+			throw new DatabusConvException("非法的数据总线KEY值或数据值[" + key + "]["+value+"]");
+		}
 		DataDic dataDic = this.validateMap.get(key);
 		if (dataDic == null) {
-			logger.error("非法的数据总线KEY值["+key+"]");
-			throw new IllegalDataBusKeyException("非法的数据总线KEY值["+key+"]");
+			throw new DatabusConvException("非法的数据总线KEY值[" + key + "]");
 		}
 		Class<?> clazz = null;
 		try {
 			clazz = Class.forName(dataDic.getDataType());
 		} catch (ClassNotFoundException e) {
-			logger.error("数据总线类型定义错误["+key+"]["+dataDic.getDataType()+"]");
-			throw new IllegalDataBusKeyException("数据总线类型定义错误["+key+"]["+dataDic.getDataType()+"]");
+			throw new DatabusConvException("非法的数据总线类型定义[" + key + "][" + dataDic.getDataType() + "]");
 		}
 		if (clazz != value.getClass()) {
-			logger.error("非法的数据值["+key+"]["+value+"]["+ value.getClass()+"]!=["+clazz+"]");
-			throw new IllegalDataBusTypeException("非法的数据值["+key+"]["+value+"]["+ value.getClass()+"]!=["+clazz+"]");
+			throw new DatabusConvException(
+					"非法的数据值[" + key + "][" + value + "][" + value.getClass() + "]!=[" + clazz + "]");
 		}
 	}
 

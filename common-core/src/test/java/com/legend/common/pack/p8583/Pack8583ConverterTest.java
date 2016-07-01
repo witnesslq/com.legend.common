@@ -7,13 +7,15 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.legend.common.config.config;
-import com.legend.common.exception.Pack8583Exception;
+import com.legend.common.exception.Pack8583ConvException;
+import com.legend.common.exception.Pack8583LoadException;
+import com.legend.common.exception.Unpack8583ConvException;
 import com.legend.common.pack.p8583.Pack8583Converter;
 
 public class Pack8583ConverterTest {
 
 	@Test
-	public void test8583() throws Pack8583Exception, UnsupportedEncodingException {
+	public void test8583() throws Pack8583ConvException, UnsupportedEncodingException, Unpack8583ConvException, Pack8583LoadException {
 		Pack8583Converter pack8583Converter = new Pack8583Converter(config.TPS_CONFIG+"/host/Pack8583DicMap.xml");
 		Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
 		dataMap.put("MSGID", "0010");

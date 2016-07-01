@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +14,9 @@ import javax.xml.bind.Unmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.legend.common.exception.DataConvException;
-import com.legend.common.exception.Pack8583Exception;
+import com.legend.common.exception.Pack8583ConvException;
+import com.legend.common.exception.Pack8583LoadException;
+import com.legend.common.exception.Unpack8583ConvException;
 import com.legend.common.utils.DataUtil;
 import com.legend.common.utils.DigestUtil;
 
@@ -30,42 +30,37 @@ public class Pack8583Converter {
 	/*
 	 * 使用spring构造函数注入
 	 */
-	public Pack8583Converter(String dataDicFileName) throws Pack8583Exception {
-		String dataDicFilePath = null;
-		if (dataDicFileName == null) {
-			logger.error("读取数据字典配置文件错误");
+	public Pack8583Converter(String dataDicFilePath) throws Pack8583LoadException {
+		if (dataDicFilePath == null) {
+			throw new Pack8583LoadException("装载8583数据字典配置文件错误[" + dataDicFilePath + "]");
 		}
 		try {
 			JAXBContext jc = JAXBContext.newInstance(Pack8583DicMap.class);
 			Unmarshaller ums = jc.createUnmarshaller();
-			//dataDicFilePath = Pack8583Converter.class.getClassLoader().getResource(dataDicFileName).getPath();
-			dataDicFilePath = dataDicFileName;
-			logger.info("装载8583数据字典[" + dataDicFilePath + "]");
+			logger.info("装载8583数据字典配置文件[" + dataDicFilePath + "]");
 			this.pack8583DicMap = (Pack8583DicMap) ums.unmarshal(new File(dataDicFilePath));
 		} catch (JAXBException e) {
-			logger.error("读取数据字典配置文件错误[" + dataDicFilePath + "][" + dataDicFileName + "]" + e);
-			throw new Pack8583Exception("读取数据字典配置文件错误" + e);
+			throw new Pack8583LoadException("装载8583数据字典配置文件错误[" + dataDicFilePath + "]" + e);
 		}
 
 		List<Pack8583Dic> pack8583Dics = this.pack8583DicMap.getPack8583Dic();
 		for (Pack8583Dic pack8583Dic : pack8583Dics) {
 			this.dataDicMap.put(pack8583Dic.getBitSeq().getValue(), pack8583Dic);
 		}
-		logger.info("8583报文数据字典初始化完成");
+		logger.info("装载8583数据字典配置文件成功！！！");
 	}
 
-	public byte[] to8583(Map<String, Object> dataMap) throws Pack8583Exception {
+	public byte[] to8583(Map<String, Object> dataMap) throws Pack8583ConvException {
 		return to8583(dataMap, this.pack8583DicMap.getBitMapLen(), this.pack8583DicMap.getCharsetName());
 	}
 
-	private byte[] to8583(Map<String, Object> dataMap, int bitMapLen, String charsetName) throws Pack8583Exception {
+	private byte[] to8583(Map<String, Object> dataMap, int bitMapLen, String charsetName) throws Pack8583ConvException {
 		StringBuffer mab = new StringBuffer();
 		int mapLen = bitMapLen / 8;
 		String msgId = (String) dataMap.get("MSGID");
 		logger.info("MSGID=[" + msgId + "]");
 		if (msgId == null) {
-			logger.error("MSGID未设置");
-			throw new Pack8583Exception("MSGID未设置");
+			throw new Pack8583ConvException("MSGID未设置");
 		}
 		byte[] bitMap = new byte[mapLen + 4];
 		System.arraycopy(msgId.getBytes(), 0, bitMap, 0, 4);
@@ -86,30 +81,22 @@ public class Pack8583Converter {
 				}
 				String dataCode = p8583Dic.getDataCode();
 				if (dataCode == null) {
-					logger.error("数据字典配置错误[" + bitSeq + "]");
-					throw new Pack8583Exception("数据字典配置错误");
+					throw new Pack8583ConvException("数据字典配置错误");
 				}
 				String dataType = p8583Dic.getDataType();
 				if (dataType == null) {
-					logger.error("数据字典配置错误[" + bitSeq + "]");
-					throw new Pack8583Exception("数据字典配置错误");
+					throw new Pack8583ConvException("数据字典配置错误");
 				}
 				String lenType = p8583Dic.getLenType();
 				if (lenType == null) {
-					logger.error("数据字典配置错误[" + bitSeq + "]");
-					throw new Pack8583Exception("数据字典配置错误");
+					throw new Pack8583ConvException("数据字典配置错误");
 				}
 				Object dataValue = dataMap.get(dataCode);
 				if (dataValue != null) {
 					bitMap[4 + i] ^= 0X80 >> j;
 					byte[] dst = null;
-					try {
-						dst = packDataConv(dataValue, dataType, lenType, p8583Dic.getDataLen(), p8583Dic.getDataDec(),
-								p8583Dic.getFormat(), charsetName, p8583Dic.getBitSeq().isMab(), mab);
-					} catch (DataConvException e) {
-						logger.error("数据转换错误：[" + bitSeq + "][" + dataValue + "][" + charsetName + "]");
-						throw new Pack8583Exception(e);
-					}
+					dst = packDataConv(dataValue, dataType, lenType, p8583Dic.getDataLen(), p8583Dic.getDataDec(),
+							p8583Dic.getFormat(), charsetName, p8583Dic.getBitSeq().isMab(), mab);
 					dataArea = dataArea == null ? dst : joinByteArray(dataArea, dst);
 					logger.info("第[" + bitSeq + "]位BIT值为[" + dataValue + "][" + dst.length + "]");
 				}
@@ -128,7 +115,7 @@ public class Pack8583Converter {
 	}
 
 	private byte[] packDataConv(Object dataValue, String dataType, String lenType, int dataLen, int dataDec,
-			String format, String charsetName, Boolean isMab, StringBuffer mab) throws DataConvException {
+			String format, String charsetName, Boolean isMab, StringBuffer mab) throws Pack8583ConvException {
 		String value = null;
 		switch (dataType.charAt(0)) {
 		case 'A': // 字符
@@ -142,8 +129,7 @@ public class Pack8583Converter {
 			try {
 				value = new String((byte[]) dataValue, charsetName);
 			} catch (UnsupportedEncodingException e) {
-				logger.error("不支持的编码" + charsetName + e);
-				throw new DataConvException("不支持的编码" + charsetName + e);
+				throw new Pack8583ConvException("不支持的编码" + charsetName + e);
 			}
 			break;
 		case 'N': // 数值
@@ -161,15 +147,13 @@ public class Pack8583Converter {
 			}
 			break;
 		default:
-			logger.error("不支持的数据类型" + dataType);
-			throw new DataConvException("不支持的数据类型" + dataType);
+			throw new Pack8583ConvException("不支持的数据类型" + dataType);
 		}
 		byte[] dataByte = null;
 		try {
 			dataByte = value.getBytes(charsetName);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("不支持的编码" + charsetName + e);
-			throw new DataConvException("不支持的编码" + charsetName + e);
+			throw new Pack8583ConvException("不支持的编码" + charsetName + e);
 		}
 		byte[] dst = null;
 		Integer type = Integer.valueOf(lenType);
@@ -177,8 +161,7 @@ public class Pack8583Converter {
 		case 0:
 			dst = dataByte;
 			if (dst.length != dataLen) {
-				logger.error("源数据长度错误[" + dst.length + "|" + dataLen + "]");
-				throw new DataConvException("源数据长度错误[" + dst.length + "|" + dataLen + "]");
+				throw new Pack8583ConvException("源数据长度错误[" + dst.length + "|" + dataLen + "]");
 			}
 			break;
 		case 1:
@@ -186,24 +169,21 @@ public class Pack8583Converter {
 		case 3:
 			int len = dataByte.length;
 			if (len > dataLen) {
-				logger.error("源数据长度错误[" + len + "|" + dataLen + "]");
-				throw new DataConvException("源数据长度错误[" + len + "|" + dataLen + "]");
+				throw new Pack8583ConvException("源数据长度错误[" + len + "|" + dataLen + "]");
 			}
 			dst = new byte[type + len];
 			System.arraycopy(DataUtil.fillZeroLeft(len, type).getBytes(), 0, dst, 0, type);
 			System.arraycopy(dataByte, 0, dst, type, len);
 			break;
 		default:
-			logger.error("不支持的长度类型" + lenType);
-			throw new DataConvException("不支持的编码" + lenType);
+			throw new Pack8583ConvException("不支持的长度类型" + lenType);
 		}
 
 		if (isMab) {
 			try {
 				mab.append(String.valueOf(new String(dst, charsetName) + " "));
 			} catch (UnsupportedEncodingException e) {
-				logger.error("不支持的编码格式" + charsetName + e);
-				throw new DataConvException("不支持的编码格式" + charsetName + e);
+				throw new Pack8583ConvException("不支持的编码格式[" + charsetName + "]" + e);
 			}
 		}
 
@@ -217,11 +197,12 @@ public class Pack8583Converter {
 		return pack8583.array();
 	}
 
-	public Map<String, Object> toMap(byte[] dataPack) throws Pack8583Exception {
+	public Map<String, Object> toMap(byte[] dataPack) throws Unpack8583ConvException {
 		return toMap(dataPack, this.pack8583DicMap.getBitMapLen(), this.pack8583DicMap.getCharsetName());
 	}
 
-	private Map<String, Object> toMap(byte[] dataPack, int bitMapLen, String charsetName) throws Pack8583Exception {
+	private Map<String, Object> toMap(byte[] dataPack, int bitMapLen, String charsetName)
+			throws Unpack8583ConvException {
 		StringBuffer mab = new StringBuffer();
 		int mapLen = bitMapLen / 8;
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -243,8 +224,7 @@ public class Pack8583Converter {
 				int bitSeq = i * 8 + j + 1;
 				if (bitSeq == 1) { // 处理第一位bit图
 					if ((bitMap[i] & (0X80 >> j)) == 0x00 && bitMapLen == 128) {
-						logger.error("第一位Bit图异常");
-						throw new Pack8583Exception("第一位Bit图异常");
+						throw new Unpack8583ConvException("第一位Bit图异常");
 					}
 					continue;
 				}
@@ -253,33 +233,23 @@ public class Pack8583Converter {
 				}
 				Pack8583Dic p8583Dic = dataDicMap.get(bitSeq);
 				if (p8583Dic == null) {
-					logger.error("数据字典缺失[" + bitSeq + "]");
-					throw new Pack8583Exception("数据字典缺失");
+					throw new Unpack8583ConvException("数据字典缺失[" + bitSeq + "]");
 				}
 				String dataType = p8583Dic.getDataType();
 				if (dataType == null) {
-					logger.error("数据字典配置错误[" + bitSeq + "]");
-					throw new Pack8583Exception("数据字典配置错误");
+					throw new Unpack8583ConvException("数据字典缺失[" + bitSeq + "]");
 				}
 				String lenType = p8583Dic.getLenType();
 				if (lenType == null) {
-					logger.error("数据字典配置错误[" + bitSeq + "]");
-					throw new Pack8583Exception("数据字典配置错误");
+					throw new Unpack8583ConvException("数据字典缺失[" + bitSeq + "]");
 				}
 				String dataCode = p8583Dic.getDataCode();
 				if (dataCode == null) {
-					logger.error("数据字典配置错误[" + bitSeq + "]");
-					throw new Pack8583Exception("数据字典配置错误");
+					throw new Unpack8583ConvException("数据字典缺失[" + bitSeq + "]");
 				}
 				Object dataValue = null;
-				try {
-					dataValue = unPackDataConv(dataArea, dataType, lenType, p8583Dic.getDataLen(),
-							p8583Dic.getDataDec(), p8583Dic.getFormat(), charsetName, p8583Dic.getBitSeq().isMab(),
-							mab);
-				} catch (DataConvException e) {
-					logger.error("第[" + bitSeq + "]位BIT值为[" + dataValue + "][" + charsetName + "]");
-					throw new Pack8583Exception(e);
-				}
+				dataValue = unPackDataConv(dataArea, dataType, lenType, p8583Dic.getDataLen(), p8583Dic.getDataDec(),
+						p8583Dic.getFormat(), charsetName, p8583Dic.getBitSeq().isMab(), mab);
 
 				logger.info("第[" + bitSeq + "]位BIT值为[" + dataValue + "][" + p8583Dic.getDataLen() + "]");
 				map.put(dataCode, dataValue);
@@ -293,7 +263,7 @@ public class Pack8583Converter {
 	}
 
 	private Object unPackDataConv(ByteBuffer dataArea, String dataType, String lenType, int dataLen, int dataDec,
-			String format, String charsetName, Boolean isMab, StringBuffer mab) throws DataConvException {
+			String format, String charsetName, Boolean isMab, StringBuffer mab) throws Unpack8583ConvException {
 		byte[] dst = null;
 		byte[] bLen = null;
 		Integer type = Integer.valueOf(lenType);
@@ -301,8 +271,7 @@ public class Pack8583Converter {
 		case 0:
 			dst = new byte[dataLen];
 			if (dst.length != dataLen) {
-				logger.error("源数据长度错误[" + dst.length + "|" + dataLen + "]");
-				throw new DataConvException("源数据长度错误[" + dst.length + "|" + dataLen + "]");
+				throw new Unpack8583ConvException("源数据长度错误[" + dst.length + "|" + dataLen + "]");
 			}
 			dataArea.get(dst, 0, dataLen);
 			break;
@@ -313,15 +282,13 @@ public class Pack8583Converter {
 			dataArea.get(bLen, 0, type);
 			int len = Integer.valueOf(new String(bLen));
 			if (len > dataLen) {
-				logger.error("报文数据长度错误[" + len + "|" + dataLen + "]");
-				throw new DataConvException("报文数据长度错误[" + len + "|" + dataLen + "]");
+				throw new Unpack8583ConvException("报文数据长度错误[" + len + "|" + dataLen + "]");
 			}
 			dst = new byte[len];
 			dataArea.get(dst, 0, len);
 			break;
 		default:
-			logger.error("不支持的长度类型" + lenType);
-			throw new DataConvException("不支持的编码" + lenType);
+			throw new Unpack8583ConvException("不支持的编码" + lenType);
 		}
 
 		if (isMab) {
@@ -331,8 +298,7 @@ public class Pack8583Converter {
 				}
 				mab.append(String.valueOf(new String(dst, charsetName) + " "));
 			} catch (UnsupportedEncodingException e) {
-				logger.error("不支持的编码格式" + charsetName + e);
-				throw new DataConvException("不支持的编码格式" + charsetName + e);
+				throw new Unpack8583ConvException("不支持的编码格式[" + charsetName + "]" + e);
 			}
 		}
 
@@ -340,10 +306,9 @@ public class Pack8583Converter {
 		switch (dataType.charAt(0)) {
 		case 'A': // 字符
 			try {
-				dataValue = new String(dst,charsetName).trim();
+				dataValue = new String(dst, charsetName).trim();
 			} catch (UnsupportedEncodingException e) {
-				logger.error("不支持的编码格式" + charsetName + e);
-				throw new DataConvException("不支持的编码格式" + charsetName + e);
+				throw new Unpack8583ConvException("不支持的编码格式[" + charsetName + "]" + e);
 			}
 			break;
 		case 'B': // 二进制
@@ -361,8 +326,7 @@ public class Pack8583Converter {
 			}
 			break;
 		default:
-			logger.error("不支持的数据类型" + dataType);
-			throw new DataConvException("不支持的数据类型" + dataType);
+			throw new Unpack8583ConvException("不支持的数据类型" + dataType);
 		}
 
 		return dataValue;

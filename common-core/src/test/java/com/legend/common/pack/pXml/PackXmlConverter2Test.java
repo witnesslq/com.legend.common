@@ -12,6 +12,8 @@ import org.dom4j.DocumentException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.legend.common.exception.PackXmlConvException;
+import com.legend.common.exception.UnpackXmlConvException;
 import com.legend.common.model.beps.beps_121_001_01.CustomerCreditTransfer;
 import com.legend.common.model.beps.beps_121_001_01.Document;
 import com.legend.common.model.beps.beps_121_001_01.ObjectFactory;
@@ -21,7 +23,7 @@ import com.legend.common.pack.pXml.PackXmlConverter;
 public class PackXmlConverter2Test {
 
 	@Test
-	public void testToXml() {
+	public void testToXml() throws PackXmlConvException {
 		ObjectFactory dataBaseFactory = new ObjectFactory();
 		Document document = dataBaseFactory.createDocument();
 		PKGGroupHeader1 pKGGrpHdr = new PKGGroupHeader1();
@@ -30,16 +32,12 @@ public class PackXmlConverter2Test {
 		CustomerCreditTransfer customerCreditTransfer = new CustomerCreditTransfer();
 		customerCreditTransfer.setPKGGrpHdr(pKGGrpHdr);
 		document.setCstmrCdtTrf(customerCreditTransfer);
-		try {
-			String xmlPack = PackXmlConverter.toXml(document, Document.class, "UTF-8");
-			System.out.println(xmlPack);
-		} catch (UnsupportedEncodingException | JAXBException e) {
-			e.printStackTrace();
-		}
+		String xmlPack = PackXmlConverter.toXml(document, Document.class, "UTF-8");
+		System.out.println(xmlPack);
 	}
 
 	@Test
-	public void testToBean() throws IOException {
+	public void testToBean() throws IOException, UnpackXmlConvException {
 		InputStream is = PackXmlConverter2Test.class.getClassLoader().getResourceAsStream("beps.121.001.01.xml");
 		BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 		String xmlStr = "";
@@ -47,16 +45,12 @@ public class PackXmlConverter2Test {
 		while ((s = br.readLine()) != null) {
 			xmlStr += s;
 		}
-		try {
-			Document document = (Document) PackXmlConverter.toBean(xmlStr, Document.class, "UTF-8");
-			System.out.println(document);
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+		Document document = (Document) PackXmlConverter.toBean(xmlStr, Document.class, "UTF-8");
+		System.out.println(document);
 	}
 
 	@Test
-	public void testGetTxCode1() throws IOException {
+	public void testGetTxCode1() throws IOException, UnpackXmlConvException {
 		InputStream is = PackXmlConverter2Test.class.getClassLoader().getResourceAsStream("beps.121.001.01.xml");
 		BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 		String xmlStr = "";
@@ -64,17 +58,12 @@ public class PackXmlConverter2Test {
 		while ((s = br.readLine()) != null) {
 			xmlStr += s;
 		}
-		try {
-			String txCode = PackXmlConverter.getTxCode(xmlStr, "/xmlns:Document/xmlns:CstmrCdtTrf/child::*[2]",
-					"UTF-8");
-			System.out.println("txCode=[" + txCode + "]");
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
+		String txCode = PackXmlConverter.getTxCode(xmlStr, "/xmlns:Document/xmlns:CstmrCdtTrf/child::*[2]", "UTF-8");
+		System.out.println("txCode=[" + txCode + "]");
 	}
 
 	@Test
-	public void testGetTxCode2() throws IOException {
+	public void testGetTxCode2() throws IOException, UnpackXmlConvException {
 		InputStream is = PackXmlConverter2Test.class.getClassLoader().getResourceAsStream("BQReq.xml");
 		BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 		String xmlStr = "";
@@ -82,23 +71,8 @@ public class PackXmlConverter2Test {
 		while ((s = br.readLine()) != null) {
 			xmlStr += s;
 		}
-		try {
-			String txCode = PackXmlConverter.getTxCode(xmlStr, "/Cartoon/Message/*[@id]", "UTF-8");
-			System.out.println("txCode=[" + txCode + "]");
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
+		String txCode = PackXmlConverter.getTxCode(xmlStr, "/Cartoon/Message/*[@id]", "UTF-8");
+		System.out.println("txCode=[" + txCode + "]");
 	}
 
-	@Test
-	public void testGetTxCode3() throws IOException {
-		String xmlStr = null;
-		String txCode = null;
-		try {
-			txCode = PackXmlConverter.getTxCode(xmlStr, "/Cartoon/Message/*[@id]", "UTF-8");
-		} catch (DocumentException e) {
-			//e.printStackTrace();
-		}
-		Assert.assertTrue(txCode == null);
-	}
 }

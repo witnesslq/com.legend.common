@@ -9,6 +9,9 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 
+import com.legend.common.utils.exception.BeanToMapException;
+import com.legend.common.utils.exception.MapToBeanException;
+
 public class DataUtil {
 
 	public static void beanCopy(Object source, Object target) {
@@ -23,22 +26,25 @@ public class DataUtil {
 		return c == null || c.isEmpty();
 	}
 
-	public static <T> Map<String, Object> beanToMap(T bean)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static <T> Map<String, Object> beanToMap(T bean) throws BeanToMapException {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		beanToMap(bean, map, bean.getClass().getSimpleName().toLowerCase());
 		return map;
 	}
 
-	private static <T> void beanToMap(T bean, Map<String, Object> map, String prefix)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private static <T> void beanToMap(T bean, Map<String, Object> map, String prefix) throws BeanToMapException {
 		Method[] methods = bean.getClass().getMethods();
 		for (Method method : methods) {
 			String methodName = method.getName();
 			if (methodName.startsWith("get") && !methodName.equals("getClass")) {
 				String key = prefix == null ? methodName.substring(3).toLowerCase()
 						: prefix + "." + methodName.substring(3).toLowerCase();
-				Object value = method.invoke(bean);
+				Object value;
+				try {
+					value = method.invoke(bean);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					throw new BeanToMapException("调用bean[" + bean + "]的方法[" + methodName + "]异常" + e);
+				}
 				Class<?> returnType = method.getReturnType();
 				if (returnType == String.class || returnType == Date.class || returnType == char.class
 						|| returnType == Byte.class || returnType == byte.class || returnType == Boolean.class
@@ -54,14 +60,19 @@ public class DataUtil {
 		}
 	}
 
-	public static <T> T mapToBean(Map<String, Object> map, Class<T> clazz)
-			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static <T> T mapToBean(Map<String, Object> map, Class<T> clazz) throws MapToBeanException
+			{
 		return mapToBean(map, clazz, clazz.getSimpleName().toLowerCase());
 	}
 
-	private static <T> T mapToBean(Map<String, Object> map, Class<T> clazz, String prefix)
-			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		T model = clazz.newInstance();
+	private static <T> T mapToBean(Map<String, Object> map, Class<T> clazz, String prefix) throws MapToBeanException
+			{
+		T model = null;
+		try {
+			model = clazz.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new MapToBeanException("实例化bean["+clazz+"]异常" + e);
+		}
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
 			String methodName = method.getName();
@@ -78,31 +89,38 @@ public class DataUtil {
 						|| parameterType == double.class) {
 					Object value = map.get(key);
 					if (value != null) {
-						System.out.println(key);
-						method.invoke(model, value);
+						try {
+							method.invoke(model, value);
+						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+							throw new MapToBeanException("调用bean[" + clazz + "]的方法[" + methodName + "]异常" + e);
+						}
 					}
 				} else {
 					Object value = mapToBean(map, parameterType, key);
-					method.invoke(model, value);
+					try {
+						method.invoke(model, value);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						throw new MapToBeanException("调用bean[" + clazz + "]的方法[" + methodName + "]异常" + e);
+					}
 				}
 			}
 		}
 		return model;
 	}
-	
-	public static String fillZeroLeft(Integer source , int dataLen) {
-		return String.format("%0"+dataLen+"d", source);
+
+	public static String fillZeroLeft(Integer source, int dataLen) {
+		return String.format("%0" + dataLen + "d", source);
 	}
-	
+
 	public static String fillSpaceRight(String source, int dataLen) {
-		return String.format("%-"+dataLen+"s", source);
+		return String.format("%-" + dataLen + "s", source);
 	}
-	
+
 	public static String removePoint(Double source, int dataLen, int dec) {
-		Double d = source*Math.pow(10, dec);
-		return String.format("%0"+dataLen+"d", Math.round(d));
+		Double d = source * Math.pow(10, dec);
+		return String.format("%0" + dataLen + "d", Math.round(d));
 	}
-	
+
 	public static Double addPoint(Double source, int dataLen, int dec) {
 		return source / Math.pow(10, dec);
 	}

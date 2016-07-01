@@ -5,8 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.legend.common.config.config;
-import com.legend.common.exception.TcpShortException;
-import com.legend.common.exception.TcpShortTimeOutException;
+import com.legend.common.exception.TcpShortConnectException;
+import com.legend.common.exception.TcpShortLoadException;
+import com.legend.common.exception.TcpShortRcvTimeOutException;
 
 public class TcpClientTest {
 	
@@ -16,7 +17,7 @@ public class TcpClientTest {
 	}
 
 	@Test
-	public void testConnect() throws TcpShortException, TcpShortTimeOutException {
+	public void testConnect() throws TcpShortLoadException, TcpShortConnectException, TcpShortRcvTimeOutException {
 		TcpClient tcpClient = new TcpClient(config.TPS_CONFIG+"host/TcpShortTargetSystem.xml");
 		IoSession session = tcpClient.connect();
 		Object bb = tcpClient.comm(session, "ABC".getBytes());

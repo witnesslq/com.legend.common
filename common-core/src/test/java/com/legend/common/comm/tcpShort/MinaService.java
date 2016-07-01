@@ -11,7 +11,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.legend.common.comm.codeFactory.LenValueCodecFactory;
+import com.legend.common.comm.codeFactory.LenValueCode.LenValueCodecFactory;
 
 public class MinaService {
 	
