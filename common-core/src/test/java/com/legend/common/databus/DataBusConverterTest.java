@@ -6,16 +6,14 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.legend.common.config.config;
-import com.legend.common.exception.ConvConfigNotFoundException;
 import com.legend.common.exception.DataBusLoadException;
 import com.legend.common.exception.DataConvLoadException;
-import com.legend.common.exception.IllegalDataBusKeyException;
-import com.legend.common.exception.IllegalDataBusTypeException;
+import com.legend.common.exception.DatabusConvException;
 
 public class DataBusConverterTest {
 
 	@Test
-	public void testDataBusConverter() throws DataBusLoadException, DataConvLoadException, ConvConfigNotFoundException, IllegalDataBusKeyException, IllegalDataBusTypeException {
+	public void testDataBusConverter() throws DataBusLoadException, DataConvLoadException, DatabusConvException {
 		DataBusConverter dataBusConverter = new DataBusConverter(config.TPS_CONFIG+"DataDicMap.xml",config.TPS_CONFIG);
 		Map<String,Object> src = new HashMap<String,Object>();
 		src.put("cartoon.message.id", "123");

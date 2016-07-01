@@ -1,4 +1,4 @@
-package com.legend.common.comm.codeFactory;
+package com.legend.common.comm.codeFactory.LenValueCode;
 
 import java.nio.charset.Charset;
 
@@ -26,7 +26,7 @@ public class LenValueCodecDecoder extends ProtocolDecoderAdapter {
 	@Override
 	public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
 		
-		context =  (com.legend.common.comm.codeFactory.Context) session.getAttribute(Context);
+		context =  (com.legend.common.comm.codeFactory.LenValueCode.Context) session.getAttribute(Context);
 		if(context == null){
 			logger.info("新连接，创建临时缓存对象");
 			context = new Context(this.lenValue);
@@ -49,7 +49,7 @@ public class LenValueCodecDecoder extends ProtocolDecoderAdapter {
 						remainLen=Integer.valueOf(bufferLen.getString(this.charset.newDecoder()));
 						logger.info("报文长度=["+remainLen+"]");
 					}catch(NumberFormatException e){
-						throw new RuntimeException("接收报文长度异常"+context);
+						throw new NumberFormatException("接收报文长度异常"+context);
 					}
 				}
 			}else{
@@ -78,7 +78,7 @@ public class LenValueCodecDecoder extends ProtocolDecoderAdapter {
 
 	@Override
 	public void finishDecode(IoSession session, ProtocolDecoderOutput out) throws Exception {
-		Context context =  (com.legend.common.comm.codeFactory.Context) session.getAttribute(Context);
+		Context context =  (com.legend.common.comm.codeFactory.LenValueCode.Context) session.getAttribute(Context);
 		if(context!=null){
 			session.removeAttribute(Context);
 		}

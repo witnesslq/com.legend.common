@@ -1,4 +1,4 @@
-package com.legend.common.comm.codeFactory;
+package com.legend.common.comm.codeFactory.LenValueCode;
 
 import java.nio.charset.Charset;
 
