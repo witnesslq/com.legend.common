@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataConvMap xmlns="http://www.legend.com/DataConvMap.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.legend.com/DataConvMap.xsd DataConvMap.xsd">
+	<DataConv>
+		<Source>MSGID</Source>
+		<Destination>ID1</Destination>
+	</DataConv>
+	<DataConv>
+		<Source>0020</Source>
+		<Destination>ID2</Destination>
+	</DataConv>
+</DataConvMap>
