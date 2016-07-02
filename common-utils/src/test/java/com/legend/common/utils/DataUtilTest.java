@@ -1,8 +1,8 @@
 package com.legend.common.utils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -25,11 +25,17 @@ public class DataUtilTest {
 	public void testIsEmptyString() {
 		Assert.assertTrue(DataUtil.isEmpty(""));
 		Assert.assertFalse(DataUtil.isEmpty("123"));
+
 	}
 
 	@Test
 	public void testIsEmptyCollection() {
-		Assert.assertTrue(DataUtil.isEmpty(new ArrayList<String>()));
+		List<String> list = null;
+		Assert.assertTrue(DataUtil.isEmpty(list));
+		list = new ArrayList<String>();
+		Assert.assertTrue(DataUtil.isEmpty(list));
+		list.add("aa");
+		Assert.assertFalse(DataUtil.isEmpty(list));
 	}
 
 	@Test
@@ -46,7 +52,6 @@ public class DataUtilTest {
 		SuperComplex.setNn("nn");
 		SuperComplex.setComplex(complex);
 		Map<String, Object> map = DataUtil.beanToMap(SuperComplex);
-		System.out.println(map);
 		Assert.assertSame("name2", map.get("supercomplex.complex.templ2.name"));
 	}
 
@@ -65,7 +70,6 @@ public class DataUtilTest {
 		superComplex.setComplex(complex);
 		Map<String, Object> map = null;
 		map = DataUtil.beanToMap(superComplex);
-		System.out.println(map);
 		Assert.assertSame("name2", map.get("supercomplex.complex.templ2.name"));
 
 		SuperComplex sc = DataUtil.mapToBean(map, SuperComplex.class);
@@ -75,22 +79,26 @@ public class DataUtilTest {
 
 	@Test
 	public void testFillZeroLeft() {
-		System.out.println("[" + DataUtil.fillZeroLeft(1000000000, 12) + "]");
+		String s = DataUtil.fillZeroLeft(1000000000, 12);
+		Assert.assertEquals(s, "001000000000");
 	}
 
 	@Test
 	public void fillSpaceRight() {
-		System.out.println("[" + DataUtil.fillSpaceRight("22", 10) + "]");
+		String s = DataUtil.fillSpaceRight("22", 10);
+		Assert.assertEquals(s, "22        ");
 	}
 
 	@Test
 	public void removePoint() {
-		System.out.println("[" + DataUtil.removePoint(123456.1211, 12, 2) + "]");
+		String s = DataUtil.removePoint(123456.1211, 12, 2);
+		Assert.assertEquals(s, "000012345612");
 	}
 
 	@Test
 	public void addPoint() {
-		System.out.println("[" + DataUtil.addPoint(123456d, 12, 2) + "]");
+		Double d = DataUtil.addPoint(123456d, 12, 2);
+		Assert.assertEquals(d, Double.valueOf(1234.56d));
 	}
 
 }
