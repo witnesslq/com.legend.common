@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.legend.com/DataConvMap.xsd DataConvMap.xsd">
 	<DataConv>
-		<Source>cartoon.message.id</Source>
+		<Source type="databus">cartoon.message.id</Source>
 		<Destination>ID1</Destination>
 	</DataConv>
 	<DataConv>
-		<Source>cartoon.message.cpreq.id</Source>
+		<Source type="databus">cartoon.message.cpreq.id</Source>
 		<Destination>ID2</Destination>
 	</DataConv>
 	<DataConv>

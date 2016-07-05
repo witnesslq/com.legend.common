@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.legend.common.core.databus.dataconv.DataConv;
+import com.legend.common.core.databus.dataconv.DataConv.Source;
 import com.legend.common.core.databus.dataconv.DataConvMap;
 import com.legend.common.core.databus.datadic.DataDic;
 import com.legend.common.core.databus.datadic.DataDicMap;
@@ -26,7 +27,7 @@ public class DataBusConverter {
 
 	private static Logger logger = LoggerFactory.getLogger(DataBusConverter.class);
 
-	private Map<String, Map<String, String>> conv = new HashMap<String, Map<String, String>>();
+	private Map<String, Map<String, DataConv>> conv = new HashMap<String, Map<String, DataConv>>();
 	private Map<String, DataDic> validateMap = new HashMap<String, DataDic>(); // 数据总线数据字典，在进行数据总线导入导出时进行类型检查
 
 	public DataBusConverter(String dataDicFileName, String convFileDirectName)
@@ -78,10 +79,10 @@ public class DataBusConverter {
 					String convFileName = convFileDirectPath + File.separator + fileName;
 					logger.info("装载数据转换配置文件[" + convFileName + "]");
 					DataConvMap dataConvMap = (DataConvMap) ums.unmarshal(new File(convFileName));
-					Map<String, String> map = new HashMap<String, String>();
+					Map<String, DataConv> map = new HashMap<String, DataConv>();
 					List<DataConv> dataConvs = dataConvMap.getDataConv();
 					for (DataConv dataConv : dataConvs) {
-						map.put(dataConv.getSource(), dataConv.getDestination());
+						map.put(dataConv.getSource().getValue(), dataConv);
 					}
 					this.conv.put(key, map);
 				} else if (fileList[i].isDirectory()) {
@@ -95,35 +96,135 @@ public class DataBusConverter {
 	}
 
 	public void toDataBus(String idConv, Map<String, Object> src, DataBus dataBus) throws DatabusConvException { // map转换
-		Map<String, String> convMap = this.conv.get(idConv);
+		Map<String, DataConv> convMap = this.conv.get(idConv);
 		if (convMap == null) {
 			throw new DatabusConvException("转换标识[" + idConv + "]尚未配置");
 		}
 		Set<Entry<String, Object>> entries = src.entrySet();
 		for (Entry<String, Object> entry : entries) {
-			String key = convMap.get(entry.getKey());
-			if (key == null) {
+			DataConv dataConv = convMap.get(entry.getKey());
+			if (dataConv == null) {
 				continue;
 			}
-			Object value = entry.getValue();
+			String key = dataConv.getDestination();
+			if (key == null) {
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+entry.getKey()+"]");
+			}
+			Source convSource = dataConv.getSource();
+			if (convSource == null) {
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+entry.getKey()+"]");
+			}
+			String type = convSource.getType();
+			if (type == null) {
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+entry.getKey()+"]");
+			}
+			Object value = null;
+			if(type.equals("databus")){
+				value = entry.getValue();
+			}else if(type.equals("constant")){
+				logger.info("转换文件[" + idConv + "]配置为常量，不应赋值["+entry.getKey()+"]");
+				continue;
+			}else{
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+entry.getKey()+"]["+type+"]");
+			}
 			dataBusValidate(key, value);
+			dataBus.put(key, value);
+		}
+		
+		Set<Entry<String, DataConv>> convMapEntries = convMap.entrySet();
+		for (Entry<String, DataConv> convMapEntrie : convMapEntries) {
+			DataConv dataConv = convMapEntrie.getValue();
+			if(dataConv==null){
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+dataConv+"]");
+			}
+			Source source = dataConv.getSource();
+			if(source==null){
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+dataConv+"]");
+			}
+			String type = source.getType();
+			if(type==null){
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+dataConv+"]");
+			}
+			String key = dataConv.getDestination();
+			if (key == null) {
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误");
+			}
+			Object value = null;
+			if(type.equals("constant")){
+				value = dataConv.getSource().getValue();
+				if(value==null){
+					throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+dataConv+"]");
+				}
+			}else{
+				continue;
+			}
 			dataBus.put(key, value);
 		}
 	}
 
 	public void toMap(String idConv, DataBus dataBus, Map<String, Object> map) throws DatabusConvException {
-		Map<String, String> convMap = this.conv.get(idConv);
+		Map<String, DataConv> convMap = this.conv.get(idConv);
 		if (convMap == null) {
 			throw new DatabusConvException("转换标识[" + idConv + "]尚未配置");
 		}
 		Set<Map.Entry<String, Object>> entries = dataBus.entrySet();
 		for (Entry<String, Object> entry : entries) {
-			String key = convMap.get(entry.getKey());
-			if (key == null) {
+			DataConv dataConv = convMap.get(entry.getKey());
+			if (dataConv == null) {
 				continue;
 			}
-			Object value = entry.getValue();
+			String key = dataConv.getDestination();
+			if (key == null) {
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+entry.getKey()+"]");
+			}
+			Source convSource = dataConv.getSource();
+			if (convSource == null) {
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+entry.getKey()+"]");
+			}
+			String type = convSource.getType();
+			if (type == null) {
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+entry.getKey()+"]");
+			}
+			Object value = null;
+			if(type.equals("databus")){
+				value = entry.getValue();
+			}else if(type.equals("constant")){
+				logger.info("转换文件[" + idConv + "]配置为常量，不应赋值["+entry.getKey()+"]");
+				continue;
+			}else{
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+entry.getKey()+"]["+type+"]");
+			}
 			dataBusValidate(entry.getKey(), value);
+			map.put(key, value);
+		}
+		
+		Set<Entry<String, DataConv>> convMapEntries = convMap.entrySet();
+		for (Entry<String, DataConv> convMapEntrie : convMapEntries) {
+			DataConv dataConv = convMapEntrie.getValue();
+			if(dataConv==null){
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+dataConv+"]");
+			}
+			Source source = dataConv.getSource();
+			if(source==null){
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+dataConv+"]");
+			}
+			String type = source.getType();
+			if(type==null){
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+dataConv+"]");
+			}
+			String key = dataConv.getDestination();
+			if (key == null) {
+				throw new DatabusConvException("转换文件[" + idConv + "]配置错误");
+			}
+			Object value = null;
+			if(type.equals("constant")){
+				value = dataConv.getSource().getValue();
+				if(value==null){
+					throw new DatabusConvException("转换文件[" + idConv + "]配置错误["+dataConv+"]");
+				}
+			}else{
+				continue;
+			}
 			map.put(key, value);
 		}
 	}

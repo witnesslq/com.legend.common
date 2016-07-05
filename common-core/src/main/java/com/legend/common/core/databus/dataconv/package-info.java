@@ -1,8 +1,8 @@
 //
-// О©╫О©╫О©╫д╪О©╫О©╫О©╫О©╫О©╫ JavaTM Architecture for XML Binding (JAXB) О©╫О©╫О©╫О©╫й╣О©╫О©╫ v2.2.8-b130911.1802 О©╫О©╫О©╫и╣О©╫
-// О©╫О©╫О©╫О©╫О©╫ <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// О©╫О©╫О©╫О©╫О©╫б╠О©╫О©╫О©╫т╢дёй╫й╠, О©╫т╢О©╫О©╫д╪О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ч╦д╤О©╫О©╫О©╫О©╫О©╫й╖О©╫О©╫
-// О©╫О©╫О©╫О©╫й╠О©╫О©╫: 2016.06.29 й╠О©╫О©╫ 02:21:51 PM CST 
+// ╢кнд╪Чйгси JavaTM Architecture for XML Binding (JAXB) рЩсцй╣ож v2.2.8-b130911.1802 иЗЁи╣д
+// гК╥цнй <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// тзжьпб╠ЮрКт╢дёй╫й╠, ╤т╢кнд╪Ч╣дкЫсппч╦д╤╪╫╚╤╙й╖║ё
+// иЗЁий╠╪Д: 2016.07.04 й╠╪Д 10:42:11 AM CST 
 //
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://www.legend.com/DataConvMap.xsd", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)

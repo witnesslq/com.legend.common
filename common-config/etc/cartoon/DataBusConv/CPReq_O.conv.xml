@@ -7,7 +7,7 @@
 		<Destination>/Cartoon/CpReq/id/dd</Destination>
 	</DataConv>
 	<DataConv>
-		<Source>CODE</Source>
+		<Source type="constant">ID2</Source>
 		<Destination>/Cartoon/CpReq/id/Code</Destination>
 	</DataConv>
 </DataConvMap>

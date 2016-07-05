@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.legend.com/DataConvMap.xsd"
-	xmlns:p="http://www.legend.com/DataConvMap.xsd"
-	elementFormDefault="qualified">
+	xmlns:p="http://www.legend.com/DataConvMap.xsd" elementFormDefault="qualified">
 
 	<element name="DataConvMap">
 		<complexType>
@@ -9,8 +8,23 @@
 				<element name="DataConv" maxOccurs="unbounded">
 					<complexType>
 						<sequence>
-							<element name="Source" type='string' />
-							<element name="Destination" type='string' />
+							<element name="Source">
+								<complexType mixed="true">
+									<simpleContent>
+										<extension base="string">
+											<attribute name="type" use="optional" default="databus">
+											<simpleType>
+												<restriction base="string">
+													<enumeration value="databus" />
+													<enumeration value="constant" />
+												</restriction>
+											</simpleType>
+											</attribute>
+										</extension>
+									</simpleContent>
+								</complexType>
+							</element>
+							<element name="Destination" type="string" />
 						</sequence>
 					</complexType>
 				</element>

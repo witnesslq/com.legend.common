@@ -24,9 +24,11 @@ public class DataBusConverterTest {
 		src.put("cartoon.message.id", source);
 		DataBus dataBus = new DataBus();
 		dataBusConverter.toDataBus("CPReq_I", src,dataBus);
+		System.out.println(dataBus);
 		Map<String,Object> des = new HashMap<String,Object>();
 		dataBusConverter.toMap("CPReq_O", dataBus,des);
 		String destination = (String) des.get("/Cartoon/CpReq/id/dd");
+		System.out.println((String) des.get("/Cartoon/CpReq/id/Code"));
 		Assert.assertEquals(source, destination);
 	}
 
