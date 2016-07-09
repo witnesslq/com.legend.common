@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RspMsgMap xmlns="http://www.legend.com/RspMsgMap.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.legend.com/RspMsgMap.xsd RspMsgMap.xsd">
+	<RspMsg>
+		<code>0000</code>
+		<message>交易成功</message>
+	</RspMsg>
+	<RspMsg>
+		<code>9999</code>
+		<message>交易失败</message>
+	</RspMsg>
+</RspMsgMap>

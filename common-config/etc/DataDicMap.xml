@@ -3,68 +3,98 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.legend.com/DataDicMap.xsd DataDicMap.xsd">
 	<DataDic>
-		<DataCode>ID1</DataCode>
+		<DataCode>MESSAGEID</DataCode>
 		<DataType>java.lang.String</DataType>
-		<Desc>ID1</Desc>
-	</DataDic>
-	<DataDic>
-		<DataCode>ID2</DataCode>
-		<DataType>java.lang.String</DataType>
-		<Desc>ID2</Desc>
-	</DataDic>
-	<DataDic>
-		<DataCode>REQDATE</DataCode>
-		<DataType>java.lang.String</DataType>
-		<Desc>REQDATE</Desc>
+		<Desc>消息ID</Desc>
 	</DataDic>
 	<DataDic>
 		<DataCode>VERSION</DataCode>
 		<DataType>java.lang.String</DataType>
-		<Desc>VERSION</Desc>
-	</DataDic>
-	<DataDic>
-		<DataCode>CUR</DataCode>
-		<DataType>java.lang.Short</DataType>
-		<Desc>CUR</Desc>
+		<Desc>版本号</Desc>
 	</DataDic>
 	<DataDic>
 		<DataCode>INSTID</DataCode>
 		<DataType>java.lang.String</DataType>
-		<Desc>INSTID</Desc>
+		<Desc>机构标识</Desc>
 	</DataDic>
 	<DataDic>
 		<DataCode>CERTID</DataCode>
 		<DataType>java.lang.String</DataType>
-		<Desc>CERTID</Desc>
+		<Desc>数字证书标识</Desc>
 	</DataDic>
 	<DataDic>
 		<DataCode>SERIALNO</DataCode>
-		<DataType>java.lang.Long</DataType>
-		<Desc>SERIALNO</Desc>
+		<DataType>java.lang.String</DataType>
+		<Desc>流水号</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>DATE</DataCode>
+		<DataType>java.lang.String</DataType>
+		<Desc>交易日期和时间</Desc>
 	</DataDic>
 	<DataDic>
 		<DataCode>SIGNNO</DataCode>
-		<DataType>java.lang.Long</DataType>
-		<Desc>SIGNNO</Desc>
+		<DataType>java.lang.String</DataType>
+		<Desc>卡通协议号</Desc>
 	</DataDic>
 	<DataDic>
 		<DataCode>CHARGE</DataCode>
-		<DataType>java.lang.Byte</DataType>
-		<Desc>CHARGE</Desc>
+		<DataType>java.lang.Double</DataType>
+		<Desc>手续费</Desc>
 	</DataDic>
 	<DataDic>
 		<DataCode>AMOUNT</DataCode>
-		<DataType>java.lang.Short</DataType>
-		<Desc>AMOUNT</Desc>
+		<DataType>java.lang.Double</DataType>
+		<Desc>交易金额</Desc>
 	</DataDic>
 	<DataDic>
-		<DataCode>RspMsg</DataCode>
+		<DataCode>CURRENCY</DataCode>
 		<DataType>java.lang.String</DataType>
-		<Desc>RspMsg</Desc>
+		<Desc>交易货币代码</Desc>
 	</DataDic>
 	<DataDic>
-		<DataCode>RspCode</DataCode>
+		<DataCode>TPS-PLATDATE</DataCode>
+		<DataType>java.lang.Integer</DataType>
+		<Desc>平台日期</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>TPS-PLATTRACENO</DataCode>
+		<DataType>java.lang.Integer</DataType>
+		<Desc>平台流水</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>TPS-PLATTIME</DataCode>
 		<DataType>java.lang.String</DataType>
-		<Desc>RspCode</Desc>
+		<Desc>平台时间</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>TPS-HOSTDATE</DataCode>
+		<DataType>java.lang.Integer</DataType>
+		<Desc>主机日期</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>TPS-HOSTTRACENO</DataCode>
+		<DataType>java.lang.Integer</DataType>
+		<Desc>主机流水</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>TPS-TXCODE</DataCode>
+		<DataType>java.lang.String</DataType>
+		<Desc>交易代码</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>TPS-FROMCHNL</DataCode>
+		<DataType>java.lang.String</DataType>
+		<Desc>交易渠道</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>TPS-RSPCODE</DataCode>
+		<DataType>java.lang.String</DataType>
+		<Desc>响应代码</Desc>
+	</DataDic>
+	<DataDic>
+		<DataCode>TPS-RSPMSG</DataCode>
+		<DataType>java.lang.String</DataType>
+		<Desc>响应信息</Desc>
 	</DataDic>
 </DataDicMap>

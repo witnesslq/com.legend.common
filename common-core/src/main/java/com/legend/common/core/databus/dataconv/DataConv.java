@@ -8,69 +8,109 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "source",
-    "destination"
-})
+@XmlType(name = "", propOrder = { "source", "destination", "format" })
 public class DataConv {
 
-    @XmlElement(name = "Source", required = true)
-    protected DataConv.Source source;
-    @XmlElement(name = "Destination", required = true)
-    protected String destination;
+	@XmlElement(name = "Source", required = true)
+	protected DataConv.Source source;
+	@XmlElement(name = "Destination", required = true)
+	protected String destination;
+	@XmlElement(name = "Format")
+	protected DataConv.Format format;
 
+	public DataConv.Source getSource() {
+		return source;
+	}
 
-    public DataConv.Source getSource() {
-        return source;
-    }
+	public void setSource(DataConv.Source value) {
+		this.source = value;
+	}
 
+	public String getDestination() {
+		return destination;
+	}
 
-    public void setSource(DataConv.Source value) {
-        this.source = value;
-    }
+	public void setDestination(String value) {
+		this.destination = value;
+	}
 
+	public DataConv.Format getFormat() {
+		return format;
+	}
 
-    public String getDestination() {
-        return destination;
-    }
+	public void setFormat(DataConv.Format value) {
+		this.format = value;
+	}
 
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder = { "value" })
+	public static class Format {
 
-    public void setDestination(String value) {
-        this.destination = value;
-    }
+		@XmlValue
+		protected FormatRestriction value;
+		@XmlAttribute(name = "dec")
+		protected Integer dec;
 
+		public FormatRestriction getValue() {
+			return value;
+		}
 
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "value"
-    })
-    public static class Source {
+		public void setValue(FormatRestriction value) {
+			this.value = value;
+		}
 
-        @XmlValue
-        protected String value;
-        @XmlAttribute(name = "type")
-        protected String type;
+		public Integer getDec() {
+			return dec;
+		}
 
-        public String getValue() {
-            return value;
-        }
+		public void setDec(Integer value) {
+			this.dec = value;
+		}
+	}
 
-        public void setValue(String value) {
-            this.value = value;
-        }
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder = { "value" })
+	public static class Source {
 
-        public String getType() {
-            if (type == null) {
-                return "databus";
-            } else {
-                return type;
-            }
-        }
+		@XmlValue
+		protected String value;
+		@XmlAttribute(name = "from")
+		protected String from;
+		@XmlAttribute(name = "type")
+		protected String type;
 
-        public void setType(String value) {
-            this.type = value;
-        }
+		public String getValue() {
+			return value;
+		}
 
-    }
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		public String getFrom() {
+			if (from == null) {
+				return "databus";
+			} else {
+				return from;
+			}
+		}
+
+		public void setFrom(String from) {
+			this.from = from;
+		}
+		
+		public String getType() {
+			if (type == null) {
+				return "string";
+			} else {
+				return type;
+			}
+		}
+
+		public void setType(String value) {
+			this.type = value;
+		}
+
+	}
 
 }

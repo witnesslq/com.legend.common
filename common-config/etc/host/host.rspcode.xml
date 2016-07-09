@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RspCodeMap xmlns="http://www.legend.com/RspCodeMap.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.legend.com/RspCodeMap.xsd RspCodeMap.xsd"
+	defaultErrorInCode="9999" defaultErrorOutCode="99">
+	<RspCode>
+		<Inner>9900</Inner>
+		<Outter>99</Outter>
+	</RspCode>
+	<RspCode>
+		<Inner>7700</Inner>
+		<Outter>77</Outter>
+	</RspCode>
+</RspCodeMap>

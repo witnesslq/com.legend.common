@@ -3,24 +3,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.legend.com/DataConvMap.xsd DataConvMap.xsd">
 	<DataConv>
-		<Source type="databus">cartoon.message.id</Source>
-		<Destination>ID1</Destination>
-	</DataConv>
-	<DataConv>
-		<Source type="databus">cartoon.message.cpreq.id</Source>
-		<Destination>ID2</Destination>
-	</DataConv>
-	<DataConv>
-		<Source>cartoon.message.cpreq.date</Source>
-		<Destination>REQDATE</Destination>
+		<Source>cartoon.message.id</Source>
+		<Destination>MESSAGEID</Destination>
 	</DataConv>
 	<DataConv>
 		<Source>cartoon.message.cpreq.version</Source>
 		<Destination>VERSION</Destination>
-	</DataConv>
-	<DataConv>
-		<Source>cartoon.message.cpreq.currency</Source>
-		<Destination>CUR</Destination>
 	</DataConv>
 	<DataConv>
 		<Source>cartoon.message.cpreq.instid</Source>
@@ -35,15 +23,25 @@
 		<Destination>SERIALNO</Destination>
 	</DataConv>
 	<DataConv>
+		<Source>cartoon.message.cpreq.date</Source>
+		<Destination>DATE</Destination>
+	</DataConv>
+	<DataConv>
 		<Source>cartoon.message.cpreq.signno</Source>
 		<Destination>SIGNNO</Destination>
 	</DataConv>
 	<DataConv>
 		<Source>cartoon.message.cpreq.charge</Source>
 		<Destination>CHARGE</Destination>
+		<Format dec="2">point</Format>
 	</DataConv>
 	<DataConv>
 		<Source>cartoon.message.cpreq.amount</Source>
 		<Destination>AMOUNT</Destination>
+		<Format dec="2">point</Format>
+	</DataConv>
+	<DataConv>
+		<Source>cartoon.message.cpreq.currency</Source>
+		<Destination>CURRENCY</Destination>
 	</DataConv>
 </DataConvMap>

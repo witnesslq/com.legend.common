@@ -97,7 +97,7 @@ public class DataUtilTest {
 
 	@Test
 	public void addPoint() {
-		Double d = DataUtil.addPoint(123456d, 12, 2);
+		Double d = DataUtil.addPoint(123456d, 2);
 		Assert.assertEquals(d, Double.valueOf(1234.56d));
 	}
 

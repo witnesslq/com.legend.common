@@ -12,23 +12,54 @@
 								<complexType mixed="true">
 									<simpleContent>
 										<extension base="string">
-											<attribute name="type" use="optional" default="databus">
-											<simpleType>
-												<restriction base="string">
-													<enumeration value="databus" />
-													<enumeration value="constant" />
-												</restriction>
-											</simpleType>
+											<attribute name="from" use="optional" default="databus">
+												<simpleType>
+													<restriction base="string">
+														<enumeration value="databus" />
+														<enumeration value="constant" />
+													</restriction>
+												</simpleType>
+											</attribute>
+											<attribute name="type" use="optional" default="string">
+												<simpleType>
+													<restriction base="string">
+														<enumeration value="string" />
+														<enumeration value="integer" />
+														<enumeration value="double" />
+													</restriction>
+												</simpleType>
 											</attribute>
 										</extension>
 									</simpleContent>
 								</complexType>
 							</element>
 							<element name="Destination" type="string" />
+							<!-- 数据格式化标志 -->
+							<element name="Format" minOccurs="0" maxOccurs="1">
+								<complexType mixed="true">
+									<simpleContent>
+										<extension base="p:Format_Restriction">
+											<attribute name="dec">
+												<simpleType>
+													<restriction base="integer">
+														<minInclusive value="2" />
+														<maxInclusive value="2" />
+													</restriction>
+												</simpleType>
+											</attribute>
+										</extension>
+									</simpleContent>
+								</complexType>
+							</element>
 						</sequence>
 					</complexType>
 				</element>
 			</sequence>
 		</complexType>
 	</element>
+	<simpleType name="Format_Restriction">
+		<restriction base="string">
+			<enumeration value="point" />
+		</restriction>
+	</simpleType>
 </schema>

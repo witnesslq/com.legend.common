@@ -1,29 +1,27 @@
 package com.legend.common.core.exception;
 
-public class DatabusConvException extends Exception {
+public class RspCodeConvLoadException extends Exception {
 
-	private static final long serialVersionUID = -1643070857914589327L;
-
-	public DatabusConvException() {
+	public RspCodeConvLoadException() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DatabusConvException(String message) {
+	public RspCodeConvLoadException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
 
-	public DatabusConvException(Throwable cause) {
+	public RspCodeConvLoadException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public DatabusConvException(String message, Throwable cause) {
+	public RspCodeConvLoadException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public DatabusConvException(String message, Throwable cause, boolean enableSuppression,
+	public RspCodeConvLoadException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
