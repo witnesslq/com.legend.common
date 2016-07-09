@@ -120,8 +120,13 @@ public class DataUtil {
 		Double d = source * Math.pow(10, dec);
 		return String.format("%0" + dataLen + "d", Math.round(d));
 	}
+	
+	public static String removePoint(Double source, int dec) {
+		Double d = source * Math.pow(10, dec);
+		return String.format("%d", Math.round(d));
+	}
 
-	public static Double addPoint(Double source, int dataLen, int dec) {
+	public static Double addPoint(Double source, int dec) {
 		return source / Math.pow(10, dec);
 	}
 

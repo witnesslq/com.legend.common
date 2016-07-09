@@ -1,5 +1,6 @@
 package com.legend.common.dao.impl;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -72,22 +73,22 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 	
 	@Override
-	public T loadEntity(Integer id) {
+	public T loadEntity(Serializable id) {
 		return this.hibernateTemplate.load(clazz, id);
 	}
 	
 	@Override
-	public T loadEntityForUpdate(Integer id) {
+	public T loadEntityForUpdate(Serializable id) {
 		return this.hibernateTemplate.load(clazz, id,LockMode.PESSIMISTIC_WRITE);
 	}
 
 	@Override
-	public T getEntity(Integer id) {
+	public T getEntity(Serializable id) {
 		return this.hibernateTemplate.get(clazz, id);
 	}
 
 	@Override
-	public T getEntityForUpdate(Integer id) {
+	public T getEntityForUpdate(Serializable id) {
 		return this.hibernateTemplate.get(clazz, id, LockMode.PESSIMISTIC_WRITE);
 	}
 	

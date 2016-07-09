@@ -1,5 +1,6 @@
 package com.legend.common.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 public interface BaseDao<T> {
@@ -12,10 +13,10 @@ public interface BaseDao<T> {
 	public void deleteEntity(T t);
 	
 	//读取方法
-	public T loadEntity(Integer i);
-	public T loadEntityForUpdate(Integer i);
-	public T getEntity(Integer i);
-	public T getEntityForUpdate(Integer i);
+	public T loadEntity(Serializable i);
+	public T loadEntityForUpdate(Serializable i);
+	public T getEntity(Serializable i);
+	public T getEntityForUpdate(Serializable i);
 	public List<T> findEntityByHql(String hql,Object...objects);
 	public List<T> findEntityByExample(T t);
 	public List<T> findEntityByExampleForPage(T t,final int offset,final int length);

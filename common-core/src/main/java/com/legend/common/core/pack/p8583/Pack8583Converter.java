@@ -322,7 +322,7 @@ public class Pack8583Converter {
 		case 'D': // 金额
 			double money = Double.valueOf(new String(dst));
 			if (format != null && format.equals("point")) {
-				dataValue = DataUtil.addPoint(money, dataLen, dataDec);
+				dataValue = DataUtil.addPoint(money, dataDec);
 			} else {
 				dataValue = money;
 			}

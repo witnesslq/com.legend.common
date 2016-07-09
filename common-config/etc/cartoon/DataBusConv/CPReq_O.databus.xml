@@ -3,11 +3,16 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.legend.com/DataConvMap.xsd DataConvMap.xsd">
 	<DataConv>
-		<Source>ID1</Source>
+		<Source>MESSAGEID</Source>
 		<Destination>/Cartoon/CpReq/id/dd</Destination>
 	</DataConv>
 	<DataConv>
-		<Source>CODE</Source>
+		<Source from="constant" type="double">5.89</Source>
+		<Destination>/Cartoon/CpReq/id/amount</Destination>
+		<Format dec="2">point</Format>
+	</DataConv>
+	<DataConv>
+		<Source from="constant">code</Source>
 		<Destination>/Cartoon/CpReq/id/Code</Destination>
 	</DataConv>
 </DataConvMap>
