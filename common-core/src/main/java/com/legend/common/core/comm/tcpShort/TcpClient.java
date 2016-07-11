@@ -1,14 +1,9 @@
 package com.legend.common.core.comm.tcpShort;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.apache.mina.core.future.CloseFuture;
 import org.apache.mina.core.future.ConnectFuture;
@@ -22,9 +17,10 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.legend.common.config.system.target.TargetSystem;
+import com.legend.common.config.system.target.TargetSystemConfig;
 import com.legend.common.core.comm.codeFactory.LenValueCode.LenValueCodecFactory;
 import com.legend.common.core.exception.TcpShortConnectException;
-import com.legend.common.core.exception.TcpShortLoadException;
 import com.legend.common.core.exception.TcpShortRcvTimeOutException;
 
 public class TcpClient {
@@ -34,16 +30,9 @@ public class TcpClient {
 	private IoConnector connector;
 	private TargetSystem targetSystem;
 
-	public TcpClient(String targeSystemFilePath) throws TcpShortLoadException {
-
-		try {
-			JAXBContext jc = JAXBContext.newInstance(TargetSystem.class);
-			Unmarshaller ums = jc.createUnmarshaller();
-			logger.info("装载目标系统通讯信息[" + targeSystemFilePath + "]");
-			this.targetSystem = (TargetSystem) ums.unmarshal(new File(targeSystemFilePath));
-		} catch (JAXBException e) {
-			throw new TcpShortLoadException("装载目标系统通讯信息文件错误[" + targeSystemFilePath + "]" + e);
-		}
+	public TcpClient(TargetSystemConfig targetSystemConfig) {
+		
+		this.targetSystem = targetSystemConfig.getTargetSystem();
 
 		connector = new NioSocketConnector();
 		connector.getSessionConfig().setMinReadBufferSize(1024);
@@ -52,10 +41,6 @@ public class TcpClient {
 		if (this.targetSystem.isUseLog()) {
 			logger.info("开启通讯日志");
 			connector.getFilterChain().addLast("logging", new LoggingFilter());
-		}
-		
-		if(this.targetSystem.getCodecFactory()==null){
-			throw new TcpShortLoadException("目标系统通讯协议类型未配置");
 		}
 		
 		logger.info("通讯协议类型=[" + this.targetSystem.getCodecFactory().getValue().value() + "]");

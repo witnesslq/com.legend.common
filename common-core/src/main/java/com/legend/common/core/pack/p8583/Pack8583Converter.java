@@ -1,21 +1,18 @@
 package com.legend.common.core.pack.p8583;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.legend.common.config.pack.p8583.Pack8583Config;
+import com.legend.common.config.pack.p8583.Pack8583Dic;
+import com.legend.common.config.pack.p8583.Pack8583DicMap;
 import com.legend.common.core.exception.Pack8583ConvException;
-import com.legend.common.core.exception.Pack8583LoadException;
 import com.legend.common.core.exception.Unpack8583ConvException;
 import com.legend.common.utils.DataUtil;
 import com.legend.common.utils.DigestUtil;
@@ -30,18 +27,9 @@ public class Pack8583Converter {
 	/*
 	 * 使用spring构造函数注入
 	 */
-	public Pack8583Converter(String dataDicFilePath) throws Pack8583LoadException {
-		if (dataDicFilePath == null) {
-			throw new Pack8583LoadException("装载8583数据字典配置文件错误[" + dataDicFilePath + "]");
-		}
-		try {
-			JAXBContext jc = JAXBContext.newInstance(Pack8583DicMap.class);
-			Unmarshaller ums = jc.createUnmarshaller();
-			logger.info("装载8583数据字典配置文件[" + dataDicFilePath + "]");
-			this.pack8583DicMap = (Pack8583DicMap) ums.unmarshal(new File(dataDicFilePath));
-		} catch (JAXBException e) {
-			throw new Pack8583LoadException("装载8583数据字典配置文件错误[" + dataDicFilePath + "]" + e);
-		}
+	public Pack8583Converter(Pack8583Config pack8583Config){
+
+		this.pack8583DicMap = pack8583Config.getPack8583DicMap();
 
 		List<Pack8583Dic> pack8583Dics = this.pack8583DicMap.getPack8583Dic();
 		for (Pack8583Dic pack8583Dic : pack8583Dics) {

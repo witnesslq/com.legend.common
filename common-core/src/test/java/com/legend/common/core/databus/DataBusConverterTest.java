@@ -6,19 +6,23 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.legend.common.config.databus.DataBusConfig;
+import com.legend.common.config.databus.conv.DataBusConvConfig;
+import com.legend.common.config.exception.ConfigLoadException;
 import com.legend.common.core.config.config;
-import com.legend.common.core.exception.DataBusLoadException;
+import com.legend.common.core.databus.conv.DataBusConverter;
 import com.legend.common.core.exception.DataBusToMapConvException;
-import com.legend.common.core.exception.DataConvLoadException;
 import com.legend.common.core.exception.MapToDataBusConvException;
 
 
 public class DataBusConverterTest {
 
 	@Test
-	public void testDataBusConverter() throws DataBusLoadException, DataConvLoadException, MapToDataBusConvException, DataBusToMapConvException {
-		DataBusConverter dataBusConverter = new DataBusConverter(config.TPS_CONFIG);
-		DataBus dataBus = new DataBus(config.TPS_CONFIG+"DataDicMap.xml");
+	public void testDataBusConverter() throws  MapToDataBusConvException, DataBusToMapConvException, ConfigLoadException {
+		DataBusConvConfig dataBusConvConfig = new DataBusConvConfig(config.TPS_CONFIG);
+		DataBusConverter dataBusConverter = new DataBusConverter(dataBusConvConfig);
+		DataBusConfig dataBusConfig = new DataBusConfig(config.TPS_CONFIG+"DataDicMap.xml");
+		DataBus dataBus = new DataBus(dataBusConfig);
 		Map<String,Object> src = new HashMap<String,Object>();
 		String source = "123";
 		src.put("cartoon.message.id", source);

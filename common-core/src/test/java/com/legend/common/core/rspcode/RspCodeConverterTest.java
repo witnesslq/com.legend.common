@@ -3,15 +3,17 @@ package com.legend.common.core.rspcode;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.legend.common.config.exception.ConfigLoadException;
+import com.legend.common.config.rspcode.RspCodeConfig;
 import com.legend.common.core.config.config;
 import com.legend.common.core.exception.RspCodeConvException;
-import com.legend.common.core.exception.RspCodeConvLoadException;
 
 public class RspCodeConverterTest {
 	
 	@Test
-	public void testRspCodeConverter() throws RspCodeConvLoadException, RspCodeConvException{
-		RspCodeConverter rspCodeConverter = new RspCodeConverter(config.TPS_CONFIG);
+	public void testRspCodeConverter() throws  RspCodeConvException, ConfigLoadException{
+		RspCodeConfig rspCodeConfig = new RspCodeConfig(config.TPS_CONFIG);
+		RspCodeConverter rspCodeConverter = new RspCodeConverter(rspCodeConfig);
 		String outRspcode = rspCodeConverter.InToOut("host", "9900");
 		String inRspcode = rspCodeConverter.OutToIn("host", "77");
 		Assert.assertEquals(outRspcode, "99");
