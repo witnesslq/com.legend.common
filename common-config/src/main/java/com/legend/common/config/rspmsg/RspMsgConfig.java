@@ -69,13 +69,4 @@ public class RspMsgConfig {
 		this.rspMsgConv = rspMsgConv;
 	}
 
-	public RspMsgMap getRspMsgMap() {
-		return rspMsgMap;
-	}
-
-	public void setRspMsgMap(RspMsgMap rspMsgMap) {
-		this.rspMsgMap = rspMsgMap;
-	}
-	
-
 }

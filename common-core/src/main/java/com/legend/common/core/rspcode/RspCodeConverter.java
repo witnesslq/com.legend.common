@@ -1,6 +1,5 @@
 package com.legend.common.core.rspcode;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -14,7 +13,7 @@ public class RspCodeConverter {
 
 	private static Logger logger = LoggerFactory.getLogger(RspCodeConverter.class);
 
-	private Map<String, Map<String, String>> rspCodeConv = new HashMap<String, Map<String, String>>();
+	private Map<String, Map<String, String>> rspCodeConv ;
 	
 	private RspCodeMap rspCodeMap;
 

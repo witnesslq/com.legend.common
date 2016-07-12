@@ -1,25 +1,20 @@
 package com.legend.common.core.rspmsg;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.legend.common.config.rspmsg.RspMsgConfig;
-import com.legend.common.config.rspmsg.RspMsgMap;
 import com.legend.common.core.exception.RspMsgConvException;
 
 public class RspMsgConverter {
 
 	private static Logger logger = LoggerFactory.getLogger(RspMsgConverter.class);
 
-	private Map<String, Map<String, String>> rspMsgConv = new HashMap<String, Map<String, String>>();
+	private Map<String, Map<String, String>> rspMsgConv ;
 	
-	private RspMsgMap rspMsgMap;
-
 	public RspMsgConverter(RspMsgConfig rspMsgConfig)  {
-		this.rspMsgMap = rspMsgConfig.getRspMsgMap();
 		this.rspMsgConv = rspMsgConfig.getRspMsgConv();
 	}
 

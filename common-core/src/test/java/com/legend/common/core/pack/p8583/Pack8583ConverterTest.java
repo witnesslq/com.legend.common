@@ -11,7 +11,6 @@ import com.legend.common.config.exception.ConfigLoadException;
 import com.legend.common.config.pack.p8583.Pack8583Config;
 import com.legend.common.core.config.config;
 import com.legend.common.core.exception.Pack8583ConvException;
-import com.legend.common.core.exception.Pack8583LoadException;
 import com.legend.common.core.exception.Unpack8583ConvException;
 
 public class Pack8583ConverterTest {
