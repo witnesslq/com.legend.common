@@ -3,15 +3,17 @@ package com.legend.common.core.rspmsg;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.legend.common.config.exception.ConfigLoadException;
+import com.legend.common.config.rspmsg.RspMsgConfig;
 import com.legend.common.core.config.config;
 import com.legend.common.core.exception.RspMsgConvException;
-import com.legend.common.core.exception.RspMsgConvLoadException;
 
 public class RspMsgConverterTest {
 	
 	@Test
-	public void testRspCodeConverter() throws RspMsgConvLoadException, RspMsgConvException {
-		RspMsgConverter rspMsgConverter = new RspMsgConverter(config.TPS_CONFIG);
+	public void testRspCodeConverter() throws  RspMsgConvException, ConfigLoadException {
+		RspMsgConfig rspMsgConfig = new RspMsgConfig(config.TPS_CONFIG);
+		RspMsgConverter rspMsgConverter = new RspMsgConverter(rspMsgConfig);
 		String message = rspMsgConverter.getMessage("tps", "0000");
 		String message1 = rspMsgConverter.getMessage("tps", "9999");
 		Assert.assertEquals(message, "交易成功");

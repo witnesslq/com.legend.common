@@ -7,9 +7,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.legend.common.config.exception.ConfigLoadException;
+import com.legend.common.config.system.target.TargetSystemConfig;
 import com.legend.common.core.config.config;
 import com.legend.common.core.exception.TcpShortConnectException;
-import com.legend.common.core.exception.TcpShortLoadException;
 import com.legend.common.core.exception.TcpShortRcvTimeOutException;
 
 public class TcpClientTest {
@@ -20,8 +21,9 @@ public class TcpClientTest {
 	}
 
 	@Test
-	public void testConnect() throws TcpShortLoadException, TcpShortConnectException, TcpShortRcvTimeOutException, UnsupportedEncodingException {
-		TcpClient tcpClient = new TcpClient(config.TPS_CONFIG+"host/TcpShortTargetSystem.xml");
+	public void testConnect() throws TcpShortConnectException, TcpShortRcvTimeOutException, UnsupportedEncodingException, ConfigLoadException {
+		TargetSystemConfig targetSystemConfig = new TargetSystemConfig(config.TPS_CONFIG+"host/TargetSystem.xml");
+		TcpClient tcpClient = new TcpClient(targetSystemConfig);
 		IoSession session = tcpClient.connect();
 		String reqMsg = "测试Socket短连接，123";
 		byte[] rspByte = (byte[]) tcpClient.comm(session, reqMsg.getBytes("UTF-8"));
