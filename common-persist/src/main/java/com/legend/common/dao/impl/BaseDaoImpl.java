@@ -100,6 +100,24 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<T> findEntityByHqlForPage(String hql	,final int offset,final int length, Object... objects) {
+		return (List<T>) this.hibernateTemplate.execute(new HibernateCallback<List<T> >() {
+			@Override
+			public List<T>   doInHibernate(Session session) throws HibernateException {
+				Query query = session.createQuery(hql);
+				for(int i=0;i<objects.length;++i){
+					query.setParameter(i,objects[i]);
+				}
+				query.setFirstResult(offset);
+				query.setMaxResults(length);
+				return  query.list();
+			}
+		});
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<T> findEntityByExample(T t) {
 		return this.hibernateTemplate.findByExample(t);
 	}

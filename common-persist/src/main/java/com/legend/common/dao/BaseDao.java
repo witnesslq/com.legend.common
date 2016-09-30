@@ -18,6 +18,7 @@ public interface BaseDao<T> {
 	public T getEntity(Serializable i);
 	public T getEntityForUpdate(Serializable i);
 	public List<T> findEntityByHql(String hql,Object...objects);
+	public List<T> findEntityByHqlForPage(String hql,final int offset,final int length,Object...objects);
 	public List<T> findEntityByExample(T t);
 	public List<T> findEntityByExampleForPage(T t,final int offset,final int length);
 	public Object countSumByHql(String hql,Object...objects);
